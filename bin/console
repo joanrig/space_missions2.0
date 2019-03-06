@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "space_missions"
+#require_relative "bundler/setup"
+require_relative "../lib/space_missions"
+
+puts "hello from bin/ console"
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
