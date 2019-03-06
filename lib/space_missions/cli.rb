@@ -15,6 +15,7 @@ class SpaceMissions::CLI
       2. ASO - Airborne Snow Observatory
       3. AVIRIS-NG - Airborne Visible-Infrared Imaging Spectrometer - Next Generation
     DOC
+    @missions = SpaceMissions::Mission.all
   end
 
   def menu
