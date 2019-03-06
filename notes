@@ -1,0 +1,57 @@
+Notes
+
+SpaceMissions CLI gem
+space agencies = artists (JPL, NASA Goddard)
+mission = songs
+planets = genres
+
+missions belong to  one or more agencies
+missions belong to (usually) one planet
+agencies have multiple missions
+agencies have planets through missions
+planets have many missions
+planets have agencies through missions
+
+missions have many instruments
+instruments belong to one mission
+instruments have agencies through missions
+
+missions have attributes
+:name,
+:type (orbital, lander or rover)
+:launch date
+:instrument cluster [inst 1, inst 2 …]
+:description
+:url
+
+
+__________________________________________________________________
+INTERFACE
+
+user types space-missions - that starts program
+
+Welcome to Space Missions!
+
+type 1 to see a list of NASA JPL current space missions
+
+type 2 for a list of planets with current missions
+  Mars: Curiosity, MOMA
+  Venus: firefly, etc.
+  Earth: OCI, etc.
+
+  Type a mission name for more info:
+    input = Curiosity
+    Description:
+    URL:
+    These are the mission's instruments. Type the number of the instrument for more info.
+      1. ChemCam
+      2. camera
+      3. SAM
+
+      input = SAM
+        => description, URL, datasets
+
+    extras
+return all agencies with missions to Mars
+return names of all missions using drills
+etc.
