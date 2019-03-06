@@ -1,6 +1,2 @@
 require_relative "space_missions/version"
-
-module SpaceMissions
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require_relative './space_missions/cli'

@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 
+require './lib/space_missions'
+SpaceMissions::CLI.new.call
 
 puts "hello from bin/space_missions"

@@ -1,7 +1,8 @@
 #CLI Controller
-class space_missions::CLI
+class SpaceMissions::CLI
 
   def call
+    puts "hello from cli.rb"
     list_missions
     menu
     goodbye
