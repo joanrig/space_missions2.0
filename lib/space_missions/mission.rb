@@ -36,14 +36,16 @@ class SpaceMissions::Mission
     # mission_events =
     # key_discoveies =
     # scientific_instruments = [] ...
-    fact_box = doc.css('p:only-child').text
-    facts = ["Type", "Status", "Launch Date", "Launch Location", "Mission End Date", "Target", "Current Location"]
-    x = facts.size
-    i = 0
-    x.times do
-      fact_box.gsub("#{facts[i]}", ", #{facts[i]}")#works one line at a time but not in series
-      i += 1
-      binding.pry
+    fact_hash = doc.css('ul.fast_facts li').text.delete("\t").delete("\n").delete("\r").split("  ")
+       #    => ["Acronym: AcrimSat",
+       # "Type: Orbiter",
+       # "Status: Past",
+       # "Launch Date: December 20, 1999",
+       # "Launch Location: Vandenberg Air Force Base, California",
+       # "Mission End Date: August 08, 2014",
+       # "Target: Earth",
+       # "Current Location: Earth OrbitAltitude: 713 km (apogee), 672 km (perigee)"]
+
     end
 
     #after fact_box is reformatted, iterate through attributes, assign to object
