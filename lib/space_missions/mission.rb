@@ -15,7 +15,24 @@ class SpaceMissions::Mission
     @mission_links
   end
 
-  def attributes
+  def scrape_mission_links
+    # @mission_links.each do link
+    #   doc = Nokogiri::HTML(open(link))#doesn't work - redirection forbidden?
+    # end
+    #example
+  html = open("https://www.jpl.nasa.gov/missions/active-cavity-irradiance-monitor-satellite-acrimsat/")
+  doc = Nokogiri::HTML(html)
+  
+  full_name = doc.css('h1.media_feature_title').text.strip
+  description = doc.css('div.wysiwyg_content p').text.strip
+    #still need to grab mission events, key discoveries and scientific instuments
+    #trying to parse info from factbox
+  fact_box = doc.css('p:only-child').text
+  facts = ["Type", "Status", "Launch Date", "Launch Location", "Mission End Date", "Target", "Current Location"]
+  facts.each do |fact|#not working
+    fact_box.gsub("fact", " fact")
+  end
+
 
 
     #go to jpl https://www.jpl.nasa.gov/missions/
