@@ -9,13 +9,11 @@ class SpaceMissions::CLI
   end
 
   def list_missions
-    puts "JPL's current Space Missions:"
-    puts <<-DOC.gsub /^\s*/, '' #(heredoc)
-      1. ASTER - Advanced Spaceborne Thermal Emission and Reflection Radiometer
-      2. ASO - Airborne Snow Observatory
-      3. AVIRIS-NG - Airborne Visible-Infrared Imaging Spectrometer - Next Generation
-    DOC
+    puts "NASA JPL's Space Missions:"
     @missions = SpaceMissions::Mission.all
+    @missions.each_with_index(1) do |mission, index|
+      puts "#{index}. #{mission.name} - #{mission.full_name}"
+    end
   end
 
   def menu
@@ -23,14 +21,10 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip.downcase
       puts "Enter the number of the mission you'd like to learn more about. You can also type 'list' to see the missions again, or type 'exit' "
-      case input
-      when "1'
-        puts""More info on mission 1"
-      when "2"
-        puts "More info on mission 2"
-      when "3"
-        puts "More info on mission 3"
-      when "list"
+
+      if input.to_i > 0
+        puts @missions[input.to_i-1]
+      elsif input ==  "list"
         list_missions
       else
         puts "Whoops! That's number of a mission. Please try again."

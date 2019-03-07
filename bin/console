@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-#require_relative "bundler/setup"
 require_relative "../lib/space_missions"
 
 puts "hello from bin/ console"
