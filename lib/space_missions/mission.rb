@@ -28,23 +28,25 @@ class SpaceMissions::Mission
       #etc
 
   #example
-  html = open("https://www.jpl.nasa.gov/missions/active-cavity-irradiance-monitor-satellite-acrimsat/")
-  doc = Nokogiri::HTML(html)
+    html = open("https://www.jpl.nasa.gov/missions/active-cavity-irradiance-monitor-satellite-acrimsat/")
+    doc = Nokogiri::HTML(html)
 
-  full_name = doc.css('h1.media_feature_title').text.strip
-  description = doc.css('div.wysiwyg_content p').text.strip
-    #still need to grab mission events, key discoveries and scientific instuments
-    #trying to parse info from factbox
-  fact_box = doc.css('p:only-child').text
-  #=> "Acronym: AcrimSatType: OrbiterStatus: PastLaunch Date: December 20, 1999Launch Location: Vandenberg Air Force Base, CaliforniaMission End Date: August 08, 2014Target: EarthCurrent Location: Earth Orbit\r\nAltitude: 713 km (apogee), 672 km (perigee)"
-  facts = ["Type", "Status", "Launch Date", "Launch Location", "Mission End Date", "Target", "Current Location"]
-  facts.each do |fact|#not working/
-    fact_box.gsub("fact", " fact")
-  end
+    full_name = doc.css('h1.media_feature_title').text.strip
+    description = doc.css('div.wysiwyg_content p').text.strip#needs formatting
+    # mission_events =
+    # key_discoveies =
+    # scientific_instruments = [] ...
+    fact_box = doc.css('p:only-child').text
+    facts = ["Type", "Status", "Launch Date", "Launch Location", "Mission End Date", "Target", "Current Location"]
+    x = facts.size
+    i = 0
+    x.times do
+      fact_box.gsub("#{facts[i]}", ", #{facts[i]}")#works one line at a time but not in series
+      i += 1
+      binding.pry
+    end
 
-  #after fact_box is reformatted, iterate through attributes, assign to object
-
-
+    #after fact_box is reformatted, iterate through attributes, assign to object
 
     #go to jpl https://www.jpl.nasa.gov/missions/
     #create mission object from name, full name and url
