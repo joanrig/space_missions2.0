@@ -4,6 +4,7 @@ class SpaceMissions::Mission
 @@all = [] #array of all missions
 
   def self.scrape_missions
+    doc = Nokogiri::html(open("https://www.jpl.nasa.gov/missions/"))
     #go to jpl https://www.jpl.nasa.gov/missions/
     #create mission object from name, full name and url
     #scrape url for all other attributes
