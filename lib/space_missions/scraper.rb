@@ -1,4 +1,4 @@
-class SpaceMissions::scraper
+class SpaceMissions::Scraper
   attr_accessor :doc, :url, :mission_links
 
   @@mission_links = []
