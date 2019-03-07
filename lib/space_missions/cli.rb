@@ -1,4 +1,5 @@
 #CLI Controller
+
 class SpaceMissions::CLI
   attr_accessor :mission
 
@@ -10,11 +11,13 @@ class SpaceMissions::CLI
   end
 
   def list_missions
-    puts "NASA JPL's Space Missions:"
-    @missions = SpaceMissions::Mission.all
-    @missions.each_with_index do |mission, index|
-      puts "#{index+1}. #{mission.name} - #{mission.full_name}"
-    end
+    #binding.pry
+    Mission.get_jpl_mission_links
+    # puts "NASA JPL's Space Missions:"
+    # @missions = SpaceMissions::Mission.all
+    # @missions.each_with_index do |mission, index|
+    #   puts "#{index+1}. #{mission.name} - #{mission.full_name}"
+    #   #binding.pry
   end
 
   def menu
