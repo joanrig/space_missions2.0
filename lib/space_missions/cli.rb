@@ -1,5 +1,6 @@
 #CLI Controller
 class SpaceMissions::CLI
+  attr_accessor :mission
 
   def call
     puts "hello from cli.rb"
@@ -11,8 +12,8 @@ class SpaceMissions::CLI
   def list_missions
     puts "NASA JPL's Space Missions:"
     @missions = SpaceMissions::Mission.all
-    @missions.each_with_index(1) do |mission, index|
-      puts "#{index}. #{mission.name} - #{mission.full_name}"
+    @missions.each_with_index do |mission, index|
+      puts "#{index+1}. #{mission.name} - #{mission.full_name}"
     end
   end
 
@@ -23,11 +24,11 @@ class SpaceMissions::CLI
       puts "Enter the number of the mission you'd like to learn more about. You can also type 'list' to see the missions again, or type 'exit' "
 
       if input.to_i > 0
-        puts @missions[input.to_i-1]
+        @mission = @missions[input.to_i-1]
       elsif input ==  "list"
         list_missions
       else
-        puts "Whoops! That's number of a mission. Please try again."
+        puts "Whoops! That's not a number of a mission. Please try again."
       end
     end
   end

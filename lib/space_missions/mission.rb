@@ -1,12 +1,14 @@
 class SpaceMissions::Mission
   attr_accessor :name, :full_name, :url, :description, :type, :status, :launch_date, :launch_location, :end_date, :target, :current_location, :events, :key_discoveries, :scientific_instruments, :all
 
+@@all = [] #array of all missions
 
-
-
-  def self.all
-    puts "hello from Mission.all"
-    mission_1 = self.new
+  def self.scrape_missions
+    #go to jpl https://www.jpl.nasa.gov/missions/
+    #create mission object from name, full name and url
+    #scrape url for all other attributes
+    mission1 = self.new
+    #scrape JPL
     mission_1.name = "AcrimSat"
     mission_1.full_name = "Active Cavity Irradiance Monitor Satellite"
     mission_1.url = "https://www.jpl.nasa.gov/missions/active-cavity-irradiance-monitor-satellite-acrimsat/"
@@ -29,13 +31,20 @@ class SpaceMissions::Mission
     # mission_1.key_discoveries = "Data from the mission helped researchers formulate global climate models and study solar physics."
     #
     # mission_1.scientific_instruments = ["Active Cavity Irradiance Monitor 3 (ACRIM 3)"]
+    @@all << self
 
     mission_2 = self.new
     mission_2.name = "ASTER"
     mission_2.full_name = "Advanced Spaceborne Thermal Emission and Reflection Radiometer"
     mission_2.url = "https://www.jpl.nasa.gov/missions/advanced-spaceborne-thermal-emission-and-reflection-radiometer-aster/"
+    @@all << self
 
-    [mission_1, mission_2]
+    @@all
+  end
+
+
+  def self.all
+    @@all
   end
 
 
