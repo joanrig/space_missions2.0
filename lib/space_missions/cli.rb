@@ -16,7 +16,7 @@ class SpaceMissions::CLI
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "just finished #get_jpl_mission_links"
 
-    SpaceMissions::Mission.get_attributes
+    SpaceMissions::Scraper.get_attributes
     puts "just finished #get_attributes"
 
     puts "it's time for you to work on def initialize"

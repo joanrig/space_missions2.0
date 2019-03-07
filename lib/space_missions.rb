@@ -2,7 +2,6 @@ require 'open-uri'
 require 'nokogiri'
 require 'pry'
 require 'open_uri_redirections'
-#can't figure out how to get pry working, also cannot run bundle
 
 require_relative "space_missions/version"
 require_relative './space_missions/mission'
