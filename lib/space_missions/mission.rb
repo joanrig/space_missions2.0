@@ -1,27 +1,32 @@
 class SpaceMissions::Mission
-  attr_accessor :name, :full_name, :url, :description, :type, :status, :launch_date, :launch_location, :end_date, :target, :current_location, :events, :key_discoveries, :scientific_instruments, :mission_links
+  attr_accessor :url, :acronym, :full_name, :describe, :attributes, :type, :status, :launch_date, :launch_location, :end_date, :target, :current_location, :altitude, :scientific_instruments
 
   @@all = [] #array of all missions
 
-  def self.get_jpl_mission_links
-    @mission_links = []
-    doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/"))
-    slides = doc.css('ul.articles li.slide')
+  def initialize
     binding.pry
-    slides.each do |slide|
-      @mission_links<< slide.css('a').attribute('href').to_s
+    @name = @@doc.css('h1.media_feature_title').text.strip
+    @describe = @doc.css('div.wysiwyg_content p').text.delete("\r").gsub("\n\n", "\n")
+    binding.pry
+    @attributes.each do |key,value|
+      self.send("#{key.to_s}=",value)
     end
-    @mission_links
+    @@all << self
   end
 
-  def scrape_mission_links
-    @mission_links.slice(3).each do |link|
-      doc = Nokogiri::HTML(open(link))
-      self.full_name = doc.css('h1.media_feature_title').text.strip
-      self.description = doc.css('div.wysiwyg_content p').text.strip#needs-formatting
-      sets = doc.css('ul.fast_facts li').text.delete("\t").delete("\n").delete("\r").split("  ")
-      binding.pry
+
+
+  def self.get_attributes
+    SpaceMissions::Scraper.mission_links[0..4].each do |link|
+      @doc = Nokogiri::HTML(open(link))
+      @attributes = @doc.css('ul.fast_facts li').text.delete("\t").delete("\n").gsub("\r", "  ").split("  ")
+      #binding.pry
     end
+  end
+
+  def self.description
+    puts @describe
+    #binding.pry
   end
 
 

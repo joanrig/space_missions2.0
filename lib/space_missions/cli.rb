@@ -11,8 +11,20 @@ class SpaceMissions::CLI
   end
 
   def list_missions
+    puts "hello from #list_missions"
     #binding.pry
-    Mission.get_jpl_mission_links
+    SpaceMissions::Scraper.get_jpl_mission_links
+    puts "just finished #get_jpl_mission_links"
+
+    SpaceMissions::Mission.get_attributes
+    puts "just finished #get_attributes"
+
+    puts "it's time for you to work on def initialize"
+
+    SpaceMissions::Mission.new
+
+    #SpaceMissions::Mission.description
+
     # puts "NASA JPL's Space Missions:"
     # @missions = SpaceMissions::Mission.all
     # @missions.each_with_index do |mission, index|
