@@ -1,3 +1,5 @@
+require 'openSSL'
+
 class SpaceMissions::Scraper
 
   def self.get_jpl_mission_links
@@ -6,7 +8,7 @@ class SpaceMissions::Scraper
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
-      mission.description = slide.css('div.item_tease_overlay').text
+      mission.description = slide.css('div.item_tease_overlay').text.delete("\r").delete(".\n")
     end
   end
 
@@ -17,7 +19,7 @@ class SpaceMissions::Scraper
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
-      attributes.each do |el|
+        attributes.each do |el|
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
         value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
         mission.send("#{key}=", value)

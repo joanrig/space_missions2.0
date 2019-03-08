@@ -6,24 +6,31 @@ class SpaceMissions::CLI
     goodbye
   end
 
+  @@target = nil
+
   def list_missions
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "just finished #get_jpl_mission_links"
 
     sleep(1)
-    puts "... Hang on, we're loading data from 100++ missions for you!"
+    puts "... Hang on, we're loading data from #{SpaceMissions::Mission.all.size} missions for you!"
 
     SpaceMissions::Scraper.get_attributes
     puts "just finished #get_attributes"
 
-    puts " ... just a few more seconds ..."
-
     i = 0
     SpaceMissions::Mission.all.each_with_index do |mission, index|
-      puts "#{index+1}. #{mission.acronym} - #{mission.name}"
-      binding.pry
-      i+= 1
+      if mission.acronym == nil
+        puts "#{index+1}. #{mission.name}"
+      else
+        puts "#{index+1}. #{mission.acronym} - #{mission.name}"
+        i+= 1
+      #binding.pry
+      end
     end
+
+    puts "That's a lot of space exploration!"
+    sleep (3)
   end
 
   def menu
@@ -44,6 +51,14 @@ class SpaceMissions::CLI
       else
         puts "Whoops! That's not a number of a mission. Please try again."
       end
+    end
+  end
+
+  def select
+    input = nil
+    while input != "exit"
+      input = gets.strip.downcase
+    targets = []
     end
   end
 
