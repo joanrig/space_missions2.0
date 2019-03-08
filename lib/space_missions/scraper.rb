@@ -1,12 +1,13 @@
 class SpaceMissions::Scraper
 
   def self.get_jpl_mission_links
-    @@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/"))
+    @@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
     slides = @@doc.css('ul.articles li.slide')
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
-      mission.name = slide.css('h4').text
+      mission.name = slide.css('h1.media_feature_title').text
+      mission.description = slide.css('div.item_tease_overlay').text
     end
   end
 
@@ -22,9 +23,8 @@ class SpaceMissions::Scraper
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
         value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
         mission.send("#{key}=", value)
-        binding.pry
       end
-    mission
+      mission
     end
   end
 

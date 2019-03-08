@@ -16,20 +16,19 @@ class SpaceMissions::CLI
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "just finished #get_jpl_mission_links"
 
+    sleep(1)
+    puts "... Hang on, we're loading data from 100++ missions for you!"
+
     SpaceMissions::Scraper.get_attributes
     puts "just finished #get_attributes"
 
-    puts "it's time for you to work on def initialize"
+    puts "Did you know Mars has the biggest volcano that we know of?  ... just a few more seonds ..."
 
-    SpaceMissions::Mission.new
-
-    #SpaceMissions::Mission.description
-
-    # puts "NASA JPL's Space Missions:"
-    # @missions = SpaceMissions::Mission.all
-    # @missions.each_with_index do |mission, index|
-    #   puts "#{index+1}. #{mission.name} - #{mission.full_name}"
-    #   #binding.pry
+    i = 0
+    SpaceMissions::Mission.all[0..5].each_with_index do |mission, index|
+      puts "#{index+1}. #{mission.acronym} - #{mission.name}"
+      i+= 1
+    end
   end
 
   def menu
@@ -39,9 +38,14 @@ class SpaceMissions::CLI
       puts "Enter the number of the mission you'd like to learn more about. You can also type 'list' to see the missions again, or type 'exit' "
 
       if input.to_i > 0
-        @mission = @missions[input.to_i-1]
+        mission = SpaceMissions::Mission.all[0..5][input.to_i - 1]
+        # attributes = ["type", "status", "launch_date", "launch_location", "mission_end_date", "target", "current_location", "altitude"]
+        # attributes.each do |attr|
+        #   puts "#{attr.gsub("_", " ").capitalize}: #{mission.attr)}"
+        end
+
       elsif input ==  "list"
-        list_missions
+        SpaceMissions::Mission.all[0..5].each_with_index.tap
       else
         puts "Whoops! That's not a number of a mission. Please try again."
       end
