@@ -11,26 +11,28 @@ class SpaceMissions::Scraper
   end
 
   def self.get_attributes
-      SpaceMissions::Mission.all.each do |mission|
+    SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
+      #from text in left column
+      mission.description = doc.css('div.wysiwyg_content p').children[0].text.strip
 
-      #from text
-      mission.description = doc.css('div.wysiwyg_content p').text.delete("\r").gsub("\n\n", "\n")
+      #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
-
       attributes.each do |el|
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
         value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
         mission.send("#{key}=", value)
         binding.pry
       end
-      mission
+    mission
     end
   end
+
 
   def self.mission_links
     @@mission_links
   end
+
 
   def self.doc
     @@doc

@@ -1,5 +1,5 @@
 class SpaceMissions::Mission
-  attr_accessor :url, :acronym, :name, :description, :destination, :attributes, :type, :status, :landing_date, :launch_date, :launch_location, :mission_end_date, :end_date, :target, :current_location, :altitude, :scientific_instruments
+  attr_accessor  :acronym, :altitude, :attributes, :current_location, :description, :destination, :end_date,  :landing_date, :launch_date, :launch_location, :mission_end_date, :name, :status, :target, :type, :url
 
   @@all = [] #array of all missions
 
