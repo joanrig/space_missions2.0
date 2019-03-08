@@ -6,7 +6,6 @@ class SpaceMissions::Scraper
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
-      mission.name = slide.css('h1.media_feature_title').text
       mission.description = slide.css('div.item_tease_overlay').text
     end
   end
@@ -14,8 +13,7 @@ class SpaceMissions::Scraper
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
-      #from text in left column
-      mission.description = doc.css('div.wysiwyg_content p').children[0].text.strip
+      mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')

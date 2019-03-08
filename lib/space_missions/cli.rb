@@ -1,18 +1,12 @@
-#CLI Controller
-
 class SpaceMissions::CLI
-  attr_accessor :mission
 
   def call
-    puts "hello from cli.rb"
     list_missions
     menu
     goodbye
   end
 
   def list_missions
-    puts "hello from #list_missions"
-    #binding.pry
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "just finished #get_jpl_mission_links"
 
@@ -22,11 +16,12 @@ class SpaceMissions::CLI
     SpaceMissions::Scraper.get_attributes
     puts "just finished #get_attributes"
 
-    puts "Did you know Mars has the biggest volcano that we know of?  ... just a few more seonds ..."
+    puts " ... just a few more seconds ..."
 
     i = 0
-    SpaceMissions::Mission.all[0..5].each_with_index do |mission, index|
+    SpaceMissions::Mission.all.each_with_index do |mission, index|
       puts "#{index+1}. #{mission.acronym} - #{mission.name}"
+      binding.pry
       i+= 1
     end
   end
@@ -42,7 +37,7 @@ class SpaceMissions::CLI
         # attributes = ["type", "status", "launch_date", "launch_location", "mission_end_date", "target", "current_location", "altitude"]
         # attributes.each do |attr|
         #   puts "#{attr.gsub("_", " ").capitalize}: #{mission.attr)}"
-        end
+        # end
 
       elsif input ==  "list"
         SpaceMissions::Mission.all[0..5].each_with_index.tap
