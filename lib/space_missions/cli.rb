@@ -1,5 +1,5 @@
 class SpaceMissions::CLI
-  attr_accessor :target
+  attr_accessor :target, :list
 
   def call
     get_data
@@ -17,12 +17,13 @@ class SpaceMissions::CLI
   end
 
   def list_missions
+    @list = SpaceMissions::Mission.all
     i = 0
-    SpaceMissions::Mission.all.each_with_index do |mission, index|
+    @list.each.with_index(1) do |mission, index|
       if mission.acronym == nil
-        puts "#{index+1}. #{mission.name}"
+        puts "#{index}. #{mission.name}"
       else
-        puts "#{index+1}. #{mission.acronym} - #{mission.name}"
+        puts "#{index}. #{mission.acronym} - #{mission.name}"
         i+= 1
       end
     end
@@ -42,8 +43,6 @@ class SpaceMissions::CLI
         commands
       elsif input == "target"
         target
-
-
       elsif input == "exit"
         goodbye
       else
@@ -102,27 +101,30 @@ class SpaceMissions::CLI
     commands
   end
 
+
   def target
     puts "For a list of missions by planet or universe, enter planet name or 'universe'"
     input=nil
     while input != "exit"
       input = gets.strip.capitalize
-      @targets = SpaceMissions::Mission.find_by_target(input)
-      found.each.with_index(1) do |mission, index|
+      #binding.pry
+      SpaceMissions::Mission.find_by_target(input).each.with_index(1) do |mission, index|
         puts "#{index}. #{mission.name}"
       end
-
-      choice
-      input=nil
-      while input != "exit"
-        if input.to_i > 0
-          @targets.each do |target, index|
-            target
-                  binding.pry
-          end
-        end
-      end
+      puts "pick the number of a mission for more info"
+      # input=nil
+      # while input != "exit"
+      #   if input.to_i > 0
+      #     mission = @targets[input.to_i - 1]
+      #     show_info(mission)
+      #   end
+      # end #2nd while
+  #   end #1st while
     end
+
+
+
+
   end
 
   def goodbye
