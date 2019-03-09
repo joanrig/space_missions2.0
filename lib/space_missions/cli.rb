@@ -12,12 +12,12 @@ class SpaceMissions::CLI
   def get_data
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "... Hang on, we're getting data from #{SpaceMissions::Mission.all.size} missions for you!"
+    puts "Give us a few seconds to search the universe ..."
+
     SpaceMissions::Scraper.get_attributes
-    puts "just finished getting data"
   end
 
   def list_missions
-    puts "listing missions"
     i = 0
     SpaceMissions::Mission.all.each_with_index do |mission, index|
       if mission.acronym == nil
@@ -28,19 +28,17 @@ class SpaceMissions::CLI
         #binding.pry
       end
     end
+    puts "Type the number of any mission you'd like to learn more about."
   end
 
-  def menu
-    puts "hello from menu"
-    input = nil
+  def menu(input=nil)
     while input != "exit"
+      commands
       input = gets.strip.downcase
-      # puts "Enter the number of the mission you'd like to learn more about."
-      # puts "You can also type 'commands' for a complete list of commands, or 'exit' to return to earth."
       if input.to_i > 0
+        # broken!!!!
         mission = SpaceMissions::Mission.all[input.to_i - 1]
-        mission.info
-        binding.pry
+        SpaceMissions::Mission.info
       elsif input ==  "list"
         list_missions
       elsif input == "commands"
@@ -61,13 +59,14 @@ class SpaceMissions::CLI
   end
 
   def commands
-    puts "Here are some other commands you can try:"
+    puts "Here are some commands you can try:"
     puts ""
     puts "'list' => see the missions again"
     puts "'target' => search the missions by target (planet, universe, etc.)"
     puts "'type' => search missions by type (orbiter, lander, rover, etc)"
     puts "'launch date' => search missions by launch year"
     puts "'end' => search missions by end of mission year"
+    puts "'exit' => to exit program"
     puts ""
     puts "What would you like to do?"
   end
