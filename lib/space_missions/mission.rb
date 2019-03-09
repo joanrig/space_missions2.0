@@ -18,6 +18,14 @@ class SpaceMissions::Mission
     #binding.pry
   end
 
+  def self.number
+    @@all.each_with_index do |mission, index|
+    number = index + 1
+    @mission.number = number
+    binding.pry
+    end
+  end
+
   def self.find_by_end_type(input)
     missions = @@all.select {|mission| mission.type == input}
   end

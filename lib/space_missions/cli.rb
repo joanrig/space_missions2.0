@@ -106,7 +106,7 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip.capitalize
       SpaceMissions::Mission.find_by_target(input).each_with_index do |mission, index|
-        puts "#{index + 1}. #{mission.name}"
+        puts "#{mission.number}. #{mission.name}"
       end
       commands
     end
