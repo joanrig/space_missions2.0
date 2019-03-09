@@ -34,16 +34,20 @@ class SpaceMissions::CLI
   def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
+
       if input.to_i > 0
         mission = @list[input.to_i - 1]
         show_info(mission)
-      elsif input ==  "list"
+      end
+
+      case input
+      when "list"
         list_missions
-      elsif input == "commands"
+      when "commands"
         commands
-      elsif input == "target"
+      when "target"
         target
-      elsif input == "exit"
+      when "exit"
         goodbye
       else
         puts "Whoops! That's not a valid command."
@@ -62,16 +66,12 @@ class SpaceMissions::CLI
   def commands
     puts "Please type a command:"
     puts ""
-    puts "enter number of any mission you'd like to learn more about"
+    puts "enter the number of any mission you'd like to learn more about"
     puts "'list' => see the list of missions"
     puts "'target' => search missions by target (planet, universe, etc.)"
-    puts "'type' => search missions by type (orbiter, lander, rover, instrumet, etc)"
-    puts "'launch date' => search missions by launch year"
-    puts "'end' => search missions by end of mission year"
     puts "'exit' => exit program"
     puts ""
     puts "What would you like to do?"
-    puts ""
     puts ""
     user_says
   end
@@ -101,7 +101,6 @@ class SpaceMissions::CLI
     commands
   end
 
-
   def target
     puts "For a list of missions by planet or universe, enter planet name or 'universe'"
     input=nil
@@ -109,13 +108,14 @@ class SpaceMissions::CLI
       input = gets.strip.capitalize
 
       @missions_by_target = SpaceMissions::Mission.find_by_target(input)
-      #binding.pry
       if @missions_by_target == []
         puts "Sorry, we did not find any missions for that target. Please enter another target, or 'commands' for more options."
+
       else
         @missions_by_target.each.with_index(1) do |mission, index|
           puts "#{index}. #{mission.name}"
         end
+
         puts "pick the number of a mission for more info"
         input = gets.strip
         if input.to_i > 0
@@ -123,7 +123,6 @@ class SpaceMissions::CLI
           show_info(mission)
         end
       end#else
-
     end#while
   end
 
