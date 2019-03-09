@@ -30,7 +30,6 @@ class SpaceMissions::CLI
     choice
   end
 
-  #try to switch to case statement
   def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
@@ -116,6 +115,7 @@ class SpaceMissions::CLI
           puts "#{index}. #{mission.name}"
         end
 
+        puts ""
         puts "pick the number of a mission for more info"
         input = gets.strip
         if input.to_i > 0

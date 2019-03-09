@@ -12,4 +12,8 @@ class SpaceMissions::Target
     @all.self.find{|target| target.name = name} || self.new(name)
   end
 
+  def all
+    @@all
+  end
+
 end

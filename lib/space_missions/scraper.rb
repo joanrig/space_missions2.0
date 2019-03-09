@@ -21,7 +21,7 @@ class SpaceMissions::Scraper
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
-
+      binding.pry
       #this block is not correctly parsing dates or multiple targets -- need to change approach
       attributes.each do |el|
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
@@ -30,6 +30,13 @@ class SpaceMissions::Scraper
       end
     end #first do
   end
+
+  # attributes = doc.css('ul.fast_facts li').text.delete("\t").split("\n  \n").map {|el| el.delete("\n").strip}
+  # attributes.each do |el|
+  #   key = el[0].downcase.gsub(" ", "_")
+  #   value = el[1].delete("\r").delete("\n").strip
+  #   mission.send("#{key}=", value)
+
 
 
   def self.mission_links
