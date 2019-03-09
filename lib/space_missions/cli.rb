@@ -45,13 +45,12 @@ class SpaceMissions::CLI
         target
       elsif input == "type"
         SpaceMissions::Mission.type
-
       elsif input == "launch"
         SpaceMissions::Mission.launch
-
       elsif input == "end"
         SpaceMissions::Mission.end
-
+      elsif input == "exit"
+        goodbye
       else
         puts "Whoops! That's not a valid command."
         commands
@@ -69,6 +68,7 @@ class SpaceMissions::CLI
   def commands
     puts "Please type a command:"
     puts ""
+    puts "enter number of any mission you'd like to learn more about"
     puts "'list' => see the list of missions"
     puts "'target' => search missions by target (planet, universe, etc.)"
     puts "'type' => search missions by type (orbiter, lander, rover, instrumet, etc)"
@@ -79,6 +79,7 @@ class SpaceMissions::CLI
     puts "What would you like to do?"
     puts ""
     puts ""
+    user_says
   end
 
   def show_info(mission)
@@ -105,14 +106,15 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip.capitalize
       SpaceMissions::Mission.find_by_target(input).each_with_index do |mission, index|
-        puts "#{mission.number}. #{mission.name}"
+        puts "#{index + 1}. #{mission.name}"
       end
+      commands
     end
-    commands
   end
 
   def goodbye
     puts "Thanks for visiting!"
+    exit
   end
 
 end
