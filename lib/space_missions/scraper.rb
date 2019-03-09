@@ -1,5 +1,3 @@
-require 'openSSL'
-
 class SpaceMissions::Scraper
 
   def self.get_jpl_mission_links
@@ -12,6 +10,7 @@ class SpaceMissions::Scraper
     end
   end
 
+  #scrape attributes from slide links
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
@@ -19,10 +18,14 @@ class SpaceMissions::Scraper
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
+
+        #this block is not correctly parsing dates or multiple targets -- need to change approach
         attributes.each do |el|
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
         value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
         mission.send("#{key}=", value)
+
+        SpaceMissions::Mission.set_target(target)
       end
       mission
     end

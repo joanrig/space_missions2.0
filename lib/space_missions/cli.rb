@@ -31,6 +31,7 @@ class SpaceMissions::CLI
     choice
   end
 
+  #try to switch to case statement
   def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
@@ -82,8 +83,15 @@ class SpaceMissions::CLI
     user_says
   end
 
+  # if you can move this out of user_says into its own method:
+  # def get_info_by_number(input)
+  #   if input.to_i > 0
+  #     mission = SpaceMissions::Mission.all[input.to_i - 1]
+  #   end
+  # end
+
   def show_info(mission)
-    #would love to park this under mission.info in class Mission
+    #should i park this under mission.info in class Mission
     puts "Acronym: #{mission.acronym}" if mission.acronym
     puts "Description: #{mission.description}" if mission.description
     puts "Type: #{mission.type}" if mission.type
@@ -107,8 +115,10 @@ class SpaceMissions::CLI
       input = gets.strip.capitalize
       SpaceMissions::Mission.find_by_target(input).each_with_index do |mission, index|
         puts "#{mission.number}. #{mission.name}"
+        binding.pry
       end
-      commands
+      choice
+      user_says
     end
   end
 
