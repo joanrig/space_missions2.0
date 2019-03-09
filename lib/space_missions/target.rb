@@ -1,5 +1,5 @@
-class Target
-  attr_accessor :name
+class
+  attr_accessor :name, :mission
 
   def initialize(name)
     @name = name
@@ -7,9 +7,10 @@ class Target
     @@all << self
   end
 
-  def find_or_by_create_by_name(name)
+  def self.find_or_by_create_by_name(name)
     @all.self.find{|target| target.name = name} || self.new(name)
   end
+
 end
 
 

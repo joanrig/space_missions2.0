@@ -39,4 +39,26 @@ etc.
 
 __________________________________________________________________
 
-add target class
+possible future features:
+search missions by launch, landing date or type
+
+add to user_says
+
+#elsif input == "type"
+#  SpaceMissions::Mission.type
+# elsif input == "launch"
+#   SpaceMissions::Mission.launch
+# elsif input == "end"
+#   SpaceMissions::Mission.end
+
+add to mission class:
+#futre featues
+# def self.find_by_launch_date(input)
+#   missions = @@all.select {|mission| mission.launch_date.split.last == input}
+# end
+#
+# def self.find_by_end_date(input)
+#   missions = @@all.select {|mission| (mission.end_date || mission.mission.end.date).split.last == input}
+#end
+
+establish separate classes for Type

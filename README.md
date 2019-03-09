@@ -1,8 +1,12 @@
 # SpaceMissions
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/space_missions`. To experiment with that code, run `bin/console` for an interactive prompt.
+Welcome to SpaceMissions gem! This gem scrapes the NASA JPL (National Aeronautics and Space Administration, Jet Propulsion Laboratory) site of current missions. You ca use this gem to see information about each mission or to search mission by target (ie planet, or universe).
 
-TODO: Delete this and the text above, and describe your gem
+Possible future features:
+Ability to search missions by
+  -type (instrument, lander/ rover)
+  -launch date 
+  -end date
 
 ## Installation
 

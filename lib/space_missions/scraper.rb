@@ -24,6 +24,7 @@ class SpaceMissions::Scraper
         key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
         value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
         mission.send("#{key}=", value)
+        target = mission.target
 
         SpaceMissions::Mission.set_target(target)
       end

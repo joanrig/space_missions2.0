@@ -1,4 +1,5 @@
 class SpaceMissions::CLI
+  attr_accessor :target
 
   def call
     get_data
@@ -6,8 +7,6 @@ class SpaceMissions::CLI
     user_says
     goodbye
   end
-
-  @@target = nil
 
   def get_data
     SpaceMissions::Scraper.get_jpl_mission_links
@@ -25,7 +24,6 @@ class SpaceMissions::CLI
       else
         puts "#{index+1}. #{mission.acronym} - #{mission.name}"
         i+= 1
-        #binding.pry
       end
     end
     choice
@@ -44,12 +42,8 @@ class SpaceMissions::CLI
         commands
       elsif input == "target"
         target
-      elsif input == "type"
-        SpaceMissions::Mission.type
-      elsif input == "launch"
-        SpaceMissions::Mission.launch
-      elsif input == "end"
-        SpaceMissions::Mission.end
+
+
       elsif input == "exit"
         goodbye
       else
@@ -61,7 +55,7 @@ class SpaceMissions::CLI
 
   def choice
     puts ""
-    puts "Enter the number of any mission you'd like to learn more about."
+    puts "Enter the number of a mission you'd like to learn more about."
     puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
     user_says
   end
@@ -113,12 +107,21 @@ class SpaceMissions::CLI
     input=nil
     while input != "exit"
       input = gets.strip.capitalize
-      SpaceMissions::Mission.find_by_target(input).each_with_index do |mission, index|
-        puts "#{mission.number}. #{mission.name}"
-        binding.pry
+      @targets = SpaceMissions::Mission.find_by_target(input)
+      found.each.with_index(1) do |mission, index|
+        puts "#{index}. #{mission.name}"
       end
+
       choice
-      user_says
+      input=nil
+      while input != "exit"
+        if input.to_i > 0
+          @targets.each do |target, index|
+            target
+                  binding.pry
+          end
+        end
+      end
     end
   end
 
