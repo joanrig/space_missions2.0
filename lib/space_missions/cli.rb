@@ -35,7 +35,7 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip.downcase
       if input.to_i > 0
-        mission = SpaceMissions::Mission.all[input.to_i - 1]
+        mission = @list[input.to_i - 1]
         show_info(mission)
       elsif input ==  "list"
         list_missions
@@ -84,12 +84,12 @@ class SpaceMissions::CLI
   # end
 
   def show_info(mission)
-    #should i park this under mission.info in class Mission
+    puts "Fast facts about #{mission.name}:"
     puts "Acronym: #{mission.acronym}" if mission.acronym
     puts "Description: #{mission.description}" if mission.description
     puts "Type: #{mission.type}" if mission.type
     puts "Launch Date: #{mission.launch_date}" if mission.launch_date
-    puts "Launch Location #{mission.launch_location}" if mission.launch_location
+    puts "Launch Location: #{mission.launch_location}" if mission.launch_location
     puts "Landing Date: #{mission.landing_date}" if mission.landing_date
     puts "End Date: #{mission.end_date}" if mission.end_date
     puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
@@ -107,20 +107,24 @@ class SpaceMissions::CLI
     input=nil
     while input != "exit"
       input = gets.strip.capitalize
+
       @missions_by_target = SpaceMissions::Mission.find_by_target(input)
-      @missions_by_target.each.with_index(1) do |mission, index|
-        puts "#{index}. #{mission.name}"
-      end
-      puts "finished listing missions by target"
+      #binding.pry
+      if @missions_by_target == []
+        puts "Sorry, we did not find any missions for that target. Please enter another target, or 'commands' for more options."
+      else
+        @missions_by_target.each.with_index(1) do |mission, index|
+          puts "#{index}. #{mission.name}"
+        end
+        puts "pick the number of a mission for more info"
+        input = gets.strip
+        if input.to_i > 0
+          mission = @missions_by_target[input.to_i - 1]
+          show_info(mission)
+        end
+      end#else
 
-
-      puts "pick the number of a mission for more info"
-      input = gets.strip
-      if input.to_i > 0
-        mission = @missions_by_target[input.to_i - 1]
-        show_info(mission)
-      end
-    end #while
+    end#while
   end
 
   def goodbye
