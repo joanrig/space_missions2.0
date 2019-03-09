@@ -22,8 +22,9 @@ class SpaceMissions::Mission
 
 
   def self.find_by_target(input)
-    missions = @@all.select {|mission| mission.target == input.capitalize}
-    binding.pry
+    if input
+      missions = @@all.select {|mission| mission.target == input.capitalize}
+    end
   end
 
 

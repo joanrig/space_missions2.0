@@ -1,5 +1,5 @@
 class SpaceMissions::CLI
-  attr_accessor :target, :list
+  attr_accessor :target, :list, :missions_by_target
 
   def call
     get_data
@@ -107,24 +107,20 @@ class SpaceMissions::CLI
     input=nil
     while input != "exit"
       input = gets.strip.capitalize
-      #binding.pry
-      SpaceMissions::Mission.find_by_target(input).each.with_index(1) do |mission, index|
+      @missions_by_target = SpaceMissions::Mission.find_by_target(input)
+      @missions_by_target.each.with_index(1) do |mission, index|
         puts "#{index}. #{mission.name}"
       end
+      puts "finished listing missions by target"
+
+
       puts "pick the number of a mission for more info"
-      # input=nil
-      # while input != "exit"
-      #   if input.to_i > 0
-      #     mission = @targets[input.to_i - 1]
-      #     show_info(mission)
-      #   end
-      # end #2nd while
-  #   end #1st while
-    end
-
-
-
-
+      input = gets.strip
+      if input.to_i > 0
+        mission = @missions_by_target[input.to_i - 1]
+        show_info(mission)
+      end
+    end #while
   end
 
   def goodbye
