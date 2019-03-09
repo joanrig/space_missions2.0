@@ -3,7 +3,7 @@ class SpaceMissions::CLI
   def call
     get_data
     list_missions
-    menu
+    user_says
     goodbye
   end
 
@@ -31,27 +31,18 @@ class SpaceMissions::CLI
     choice
   end
 
-  def menu(input=nil)
+  def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
       if input.to_i > 0
         mission = SpaceMissions::Mission.all[input.to_i - 1]
         show_info(mission)
-        commands
       elsif input ==  "list"
         list_missions
       elsif input == "commands"
         commands
-
       elsif input == "target"
-        puts "For a list of missions by planet or universe, enter planet name or 'universe'"
-        input=nil
-        while input != "exit"
-          input = gets.strip.downcase
-          SpaceMissions::Mission.target(input)
-          commands
-        end
-
+        target
       elsif input == "type"
         SpaceMissions::Mission.type
 
@@ -72,6 +63,7 @@ class SpaceMissions::CLI
     puts ""
     puts "Enter the number of any mission you'd like to learn more about."
     puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
+    user_says
   end
 
   def commands
@@ -104,13 +96,19 @@ class SpaceMissions::CLI
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
     puts ""
+    commands
   end
 
-  def select(input=nil)
+  def target
+    puts "For a list of missions by planet or universe, enter planet name or 'universe'"
+    input=nil
     while input != "exit"
-      input = gets.strip.downcase
-
+      input = gets.strip.capitalize
+      SpaceMissions::Mission.find_by_target(input).each_with_index do |mission, index|
+        puts "#{mission.number}. #{mission.name}"
+      end
     end
+    choice
   end
 
   def goodbye
