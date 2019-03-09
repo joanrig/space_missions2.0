@@ -28,17 +28,19 @@ class SpaceMissions::CLI
         #binding.pry
       end
     end
-    puts "Type the number of any mission you'd like to learn more about."
   end
 
   def menu(input=nil)
     while input != "exit"
-      commands
+      puts ""
+      puts ""
+      puts "Type the number of any mission you\'d like to learn more about."
+      puts "You can also type 'commands' for a list of commands or 'exit' to return to earth."
       input = gets.strip.downcase
       if input.to_i > 0
-        # broken!!!!
+        "i got the input"
         mission = SpaceMissions::Mission.all[input.to_i - 1]
-        SpaceMissions::Mission.info
+        show_info(mission)
       elsif input ==  "list"
         list_missions
       elsif input == "commands"
@@ -66,9 +68,25 @@ class SpaceMissions::CLI
     puts "'type' => search missions by type (orbiter, lander, rover, etc)"
     puts "'launch date' => search missions by launch year"
     puts "'end' => search missions by end of mission year"
-    puts "'exit' => to exit program"
+    puts "'exit'"
     puts ""
     puts "What would you like to do?"
+  end
+
+  def show_info(mission)
+    #would love to park this under mission.info in class Mission
+    puts "Acronym: #{mission.acronym}" if mission.acronym
+    puts "Description: #{mission.description}" if mission.description
+    puts "Type: #{mission.type}" if mission.type
+    puts "Launch Date: #{mission.launch_date}" if mission.launch_date
+    puts "Launch Location #{mission.launch_location}" if mission.launch_location
+    puts "Landing Date: #{mission.landing_date}" if mission.landing_date
+    puts "End Date: #{mission.end_date}" if mission.end_date
+    puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
+    puts "Target: #{mission.target}" if mission.target
+    puts "Destination: #{mission.destination}" if mission.destination
+    puts "Current Location: #{mission.current_location}" if mission.current_location
+    puts "Altitude: #{mission.altitude}" if mission.altitude
   end
 
   def select(input=nil)

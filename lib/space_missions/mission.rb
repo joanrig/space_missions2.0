@@ -7,21 +7,20 @@ class SpaceMissions::Mission
     @@all << self
   end
 
-  def self.info
-    @info = [@name, @acronym, @description, @type, @launch_date, @launch_location, @landing_date, @end_date, @mission_end_date, @target, @destination, @current_location, @altitude]
-    puts "Acronym: #{mission.acronym}" if mission.acronym
-    puts "Description: #{mission.description}" if mission.description
-    puts "Type: #{mission.type}" if mission.type
-    puts "Launch Date: #{mission.launch_date}" if mission.launch_date
-    puts "Launch Location #{mission.launch_location}" if mission.launch_location
-    puts "Landing Date: #{mission.landing_date}" if mission.landing_date
-    puts "End Date: #{mission.end_date}" if mission.end_date
-    puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
-    puts "Target: #{mission.target}" if mission.target
-    puts "Destination: #{mission.destination}" if mission.destination
-    puts "Current Location: #{mission.current_location}" if mission.current_location
-    puts "Altitude: #{mission.altitude}" if mission.altitude
-  end
+  # def self.info
+  #   puts "Acronym: #{mission.acronym}" if mission.acronym
+  #   puts "Description: #{mission.description}" if mission.description
+  #   puts "Type: #{mission.type}" if mission.type
+  #   puts "Launch Date: #{mission.launch_date}" if mission.launch_date
+  #   puts "Launch Location #{mission.launch_location}" if mission.launch_location
+  #   puts "Landing Date: #{mission.landing_date}" if mission.landing_date
+  #   puts "End Date: #{mission.end_date}" if mission.end_date
+  #   puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
+  #   puts "Target: #{mission.target}" if mission.target
+  #   puts "Destination: #{mission.destination}" if mission.destination
+  #   puts "Current Location: #{mission.current_location}" if mission.current_location
+  #   puts "Altitude: #{mission.altitude}" if mission.altitude
+  # end
 
   def self.find()
     self.all.select{|mission| mission[:target] == "#{target}".map{|y| y[:name]}}
