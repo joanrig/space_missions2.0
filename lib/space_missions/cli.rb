@@ -12,8 +12,8 @@ class SpaceMissions::CLI
   def get_data
     SpaceMissions::Scraper.get_jpl_mission_links
     puts "... Hang on, we're getting data from #{SpaceMissions::Mission.all.size} missions for you!"
-    puts "Give us a few seconds to search the universe ..."
-
+    sleep(1)
+    puts "Give us just a few more seconds to search the universe ..."
     SpaceMissions::Scraper.get_attributes
   end
 
@@ -28,49 +28,65 @@ class SpaceMissions::CLI
         #binding.pry
       end
     end
+    choice
   end
 
   def menu(input=nil)
     while input != "exit"
-      puts ""
-      puts ""
-      puts "Type the number of any mission you\'d like to learn more about."
-      puts "You can also type 'commands' for a list of commands or 'exit' to return to earth."
       input = gets.strip.downcase
       if input.to_i > 0
-        "i got the input"
         mission = SpaceMissions::Mission.all[input.to_i - 1]
         show_info(mission)
+        commands
       elsif input ==  "list"
         list_missions
       elsif input == "commands"
         commands
+
       elsif input == "target"
-        SpaceMissions::Mission.target
+        puts "For a list of missions by planet or universe, enter planet name or 'universe'"
+        input=nil
+        while input != "exit"
+          input = gets.strip.downcase
+          SpaceMissions::Mission.target(input)
+          commands
+        end
+
       elsif input == "type"
         SpaceMissions::Mission.type
+
       elsif input == "launch"
         SpaceMissions::Mission.launch
+
       elsif input == "end"
         SpaceMissions::Mission.end
+
       else
-        puts "Whoops! That's not a valid command. Please try again."
+        puts "Whoops! That's not a valid command."
         commands
       end
     end
   end
 
-  def commands
-    puts "Here are some commands you can try:"
+  def choice
     puts ""
-    puts "'list' => see the missions again"
-    puts "'target' => search the missions by target (planet, universe, etc.)"
-    puts "'type' => search missions by type (orbiter, lander, rover, etc)"
+    puts "Enter the number of any mission you'd like to learn more about."
+    puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
+  end
+
+  def commands
+    puts "Please type a command:"
+    puts ""
+    puts "'list' => see the list of missions"
+    puts "'target' => search missions by target (planet, universe, etc.)"
+    puts "'type' => search missions by type (orbiter, lander, rover, instrumet, etc)"
     puts "'launch date' => search missions by launch year"
     puts "'end' => search missions by end of mission year"
-    puts "'exit'"
+    puts "'exit' => exit program"
     puts ""
     puts "What would you like to do?"
+    puts ""
+    puts ""
   end
 
   def show_info(mission)
@@ -87,6 +103,7 @@ class SpaceMissions::CLI
     puts "Destination: #{mission.destination}" if mission.destination
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
+    puts ""
   end
 
   def select(input=nil)
