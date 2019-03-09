@@ -108,7 +108,7 @@ class SpaceMissions::CLI
         puts "#{mission.number}. #{mission.name}"
       end
     end
-    choice
+    commands
   end
 
   def goodbye
