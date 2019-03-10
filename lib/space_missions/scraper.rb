@@ -1,14 +1,13 @@
 class SpaceMissions::Scraper
 
-
-
   def self.get_jpl_mission_links
+
     @@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
     slides = @@doc.css('ul.articles li.slide')
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
-      mission.description = slide.css('div.item_tease_overlay').text.delete("\r").delete(".\n")
+      mission.description = slide.css('div.item_tease_overlay').text.gsub(/[\r]|[\n]/, "")
     end
   end
 
@@ -16,27 +15,22 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      doc = Nokogiri::HTML(open(mission.url))
+      #doc = Nokogiri::HTML(open(mission.url))
+      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/")) # testing voyager2 mission only
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
-      binding.pry
-      #this block is not correctly parsing dates or multiple targets -- need to change approach
+      #this block is not correctly parsing dates
       attributes.each do |el|
-        key = el.children.children.text.split(":")[0].downcase.gsub(" ", "_")
-        value = el.children.children.text.split(":")[1].delete("\r").delete("\n").strip
+        a = el.children.children.text.split(":")
+        key = a[0].downcase.gsub(" ", "_")
+        value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}
         mission.send("#{key}=", value)
+        binding.pry
       end
     end #first do
   end
-
-  # attributes = doc.css('ul.fast_facts li').text.delete("\t").split("\n  \n").map {|el| el.delete("\n").strip}
-  # attributes.each do |el|
-  #   key = el[0].downcase.gsub(" ", "_")
-  #   value = el[1].delete("\r").delete("\n").strip
-  #   mission.send("#{key}=", value)
-
 
 
   def self.mission_links
