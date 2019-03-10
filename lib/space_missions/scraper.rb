@@ -1,4 +1,6 @@
 class SpaceMissions::Scraper
+  attr_accessor :value
+
 
   def self.get_jpl_mission_links
 
@@ -15,24 +17,29 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
+      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/"))
       #doc = Nokogiri::HTML(open(mission.url))
-      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/")) # testing voyager2 mission only
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
-      #this block is not correctly parsing dates
       attributes.each do |el|
         a = el.children.children.text.split(":")
         key = a[0].downcase.gsub(" ", "_")
-        value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}
+        @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join #=> string
 
-        value = value.join if key.include?("date")#still need to reformat "August 20, 19771029 a.m. EDT (1429 UTC)"
-        mission.send("#{key}=", value)
-        binding.pry
-      end
+        #if value has multiple values, send them to mission as array
+        if key == "target" || key == "destination"
+          if @value.split(",").count > 1
+            @value = @value.split(",")
+          end
+        end
+
+        mission.send("#{key}=", @value)
+      end  #second do
     end #first do
   end
+
 
 
   def self.mission_links

@@ -9,11 +9,17 @@ class SpaceMissions::Mission
   end
 
 
-
   def self.set_target(target)#passing in value from scrape
-   target = SpaceMissions::Target.find_or_create_by_name(name)
-   @target = target
-   SpaceMissions::Target.missions << self
+
+    # #
+    # .map {|el| el = value}#each element of an array is now a target
+    # target = SpaceMissions::Target.find_or_create_by_name(name)
+    # @target = target
+    # SpaceMissions::Target.missions << self
+      target = SpaceMissions::Target.find_or_create_by_name(name)
+      @target = target
+      SpaceMissions::Target.missions << self
+    binding.pry
   end
 
 

@@ -46,7 +46,7 @@ class SpaceMissions::CLI
         commands
       when "target"
         target
-      when "exit"
+      when "exit" || "exit!"
         goodbye
       else
         puts "Whoops! That's not a valid command."
@@ -108,8 +108,8 @@ class SpaceMissions::CLI
 
       @missions_by_target = SpaceMissions::Mission.find_by_target(input)
       if @missions_by_target == []
-        puts "Sorry, we did not find any missions for that target. Please enter another target, or 'commands' for more options."
-
+        puts "Sorry, we did not find any missions for that target."
+        commands
       else
         @missions_by_target.each.with_index(1) do |mission, index|
           puts "#{index}. #{mission.name}"
