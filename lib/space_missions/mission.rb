@@ -38,5 +38,3 @@ class SpaceMissions::Mission
   def self.all
     @@all
   end
-
-end

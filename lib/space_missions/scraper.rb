@@ -3,7 +3,6 @@ class SpaceMissions::Scraper
 
 
   def self.get_jpl_mission_links
-
     @@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
     slides = @@doc.css('ul.articles li.slide')
     slides.each do |slide|
@@ -17,8 +16,8 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/"))
-      #doc = Nokogiri::HTML(open(mission.url))
+      #doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/"))
+      doc = Nokogiri::HTML(open(mission.url))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
@@ -26,10 +25,10 @@ class SpaceMissions::Scraper
       attributes.each do |el|
         a = el.children.children.text.split(":")
         key = a[0].downcase.gsub(" ", "_")
-        @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join #=> string
+        @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join
 
         #if value has multiple values, send them to mission as array
-        if key == "target" || key == "destination"
+        if (key == "target" || key == "destination")
           if @value.split(",").count > 1
             @value = @value.split(",")
           end
@@ -39,7 +38,6 @@ class SpaceMissions::Scraper
       end  #second do
     end #first do
   end
-
 
 
   def self.mission_links

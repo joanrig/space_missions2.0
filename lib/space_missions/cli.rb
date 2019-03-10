@@ -92,7 +92,7 @@ class SpaceMissions::CLI
     puts "Landing Date: #{mission.landing_date}" if mission.landing_date
     puts "End Date: #{mission.end_date}" if mission.end_date
     puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
-    puts "Target: #{mission.target}" if mission.target
+    puts "Targets: #{mission.targets}" if mission.targets
     puts "Destination: #{mission.destination}" if mission.destination
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
