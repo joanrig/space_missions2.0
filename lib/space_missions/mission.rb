@@ -9,6 +9,7 @@ class SpaceMissions::Mission
   end
 
 
+
   def self.set_target(target)#passing in value from scrape
    target = SpaceMissions::Target.find_or_create_by_name(name)
    @target = target

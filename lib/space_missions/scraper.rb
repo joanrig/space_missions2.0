@@ -26,6 +26,8 @@ class SpaceMissions::Scraper
         a = el.children.children.text.split(":")
         key = a[0].downcase.gsub(" ", "_")
         value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}
+
+        value = value.join if key.include?("date")#still need to reformat "August 20, 19771029 a.m. EDT (1429 UTC)"
         mission.send("#{key}=", value)
         binding.pry
       end
