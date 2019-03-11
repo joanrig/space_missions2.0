@@ -75,13 +75,6 @@ class SpaceMissions::CLI
     user_says
   end
 
-  # if you can move this out of user_says into its own method:
-  # def get_info_by_number(input)
-  #   if input.to_i > 0
-  #     mission = SpaceMissions::Mission.all[input.to_i - 1]
-  #   end
-  # end
-
   def show_info(mission)
     puts "Fast facts about #{mission.name}:"
     puts "Acronym: #{mission.acronym}" if mission.acronym
@@ -93,7 +86,7 @@ class SpaceMissions::CLI
     puts "End Date: #{mission.end_date}" if mission.end_date
     puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
     puts "Targets: #{mission.targets}" if mission.targets
-    puts "Destination: #{mission.destination}" if mission.destination
+    puts "Destinations: #{mission.destinations}" if mission.destinations
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
     puts ""
@@ -116,7 +109,7 @@ class SpaceMissions::CLI
         end
 
         puts ""
-        puts "pick the number of a mission for more info"
+        puts "Enter the number of the mission you'd like to learn more about"
         input = gets.strip
         if input.to_i > 0
           mission = @missions_by_target[input.to_i - 1]
