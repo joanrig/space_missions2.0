@@ -12,6 +12,10 @@ class SpaceMissions::Scraper
     end
   end
 
+  def value
+    @value
+  end
+
 
   #scrape attributes from slide links
   def self.get_attributes
@@ -24,14 +28,18 @@ class SpaceMissions::Scraper
       attributes = doc.css('ul.fast_facts li')
       attributes.each do |el|
         a = el.children.children.text.split(":")
-        key = a[0].downcase.gsub(" ", "_")
-        value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
+        @key = a[0].downcase.gsub(" ", "_")
+        @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
 
         #changed key name b/c missions have many targets and destinations
-        key = "targets" if key == "target"
-        key = "destinations" if key == "destination"
+        #if value includes many targets, make each one a value of mission.target
+        #ideally: instantiate each target as an object in Target class, which has many missions
+        if ["target", "destination"].include?(@key)
+          @key = "#{@key}s"
+          @value = @value.split(", ")[0..@value.size]
+        end
 
-        mission.send("#{key}=", value)
+        mission.send("#{@key}=", @value)
         #binding.pry
       end  #second do
     end #first do

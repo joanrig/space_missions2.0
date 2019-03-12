@@ -22,9 +22,13 @@ class SpaceMissions::Mission
 
   # #this method does not take into account multiple targets for same mission. i tried
   # missions = @@all.select {|mission| mission.targets == (input.capitalize) if mission.targets} if #input // but that did not work
-  
+
   def self.find_by_target(input)
-    missions = @@all.select {|mission| mission.targets == (input.capitalize) if mission.targets} if input
+    missions = @@all.select {|mission| mission.targets.include?(input.capitalize) if mission.targets} if input
+  end
+
+  def self.find_by_destination(input)
+    missions = @@all.select {|mission| mission.destinations.include?(input.capitalize) if mission.destinations} if input
   end
 
 

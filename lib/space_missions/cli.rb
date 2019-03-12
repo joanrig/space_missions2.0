@@ -63,15 +63,12 @@ class SpaceMissions::CLI
   end
 
   def commands
-    puts "Please type a command:"
-    puts ""
+    puts "Please type a command:\n"
     puts "enter the number of any mission you'd like to learn more about"
     puts "'list' => see the list of missions"
     puts "'target' => search missions by target (planet, universe, etc.)"
-    puts "'exit' => exit program"
-    puts ""
-    puts "What would you like to do?"
-    puts ""
+    puts "'exit' => exit program\n"
+    puts "What would you like to do?\n"
     user_says
   end
 
@@ -108,8 +105,7 @@ class SpaceMissions::CLI
           puts "#{index}. #{mission.name}"
         end
 
-        puts ""
-        puts "Enter the number of the mission you'd like to learn more about"
+        puts "\nEnter the number of the mission you'd like to learn more about"
         input = gets.strip
         if input.to_i > 0
           mission = @missions_by_target[input.to_i - 1]
