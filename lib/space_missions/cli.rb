@@ -14,6 +14,7 @@ class SpaceMissions::CLI
     sleep(2)
     puts "Give us just a few more seconds to search the universe ..."
     SpaceMissions::Scraper.get_attributes
+    SpaceMissions::Mission.set_targets
   end
 
   def list_all_missions
@@ -29,42 +30,41 @@ class SpaceMissions::CLI
         puts "#{index}. #{mission.acronym} - #{mission.name}"
       end
     end
-
-    puts "\nEnter the number of the mission you'd like to learn more about."
-    while input != "exit"
-    input = gets.strip
-    if input.to_i > 0
-      mission = @list[input.to_i - 1]
-      show_info(mission)
-    elsif input == "exit"
-      puts "Sorry, that number is not on the list."
-      commands
-    end
+    user_says
   end
 
   def user_says(input=nil)
-  while input != "exit"
-    input = gets.strip.downcase
-    if input.to_i > 0
-      mission = @list[input.to_i - 1]
-      show_info(mission)
-    end
+    "Please enter the number of a mission you'd like to learn more about."
+    while input != "exit"
+      input = gets.strip.downcase
+      if input.to_i > 0
+        mission = @list[input.to_i - 1]
+        if mission
+          show_info(mission)
+        else
+          puts "That's not a mission number. Please check your reading glasses ;) and try again."
+          commands
+        end
+      end
 
-    case input
-    when "list"
-      list_all_missions
-    when "commands"
-      commands
-    when "target"
-      target
-    when "exit"
-      goodbye
-    else
-      puts "Whoops! That's not a valid command."
-      commands
-    end
+      case input
+      when "list"
+        list_all_missions
+      when "commands"
+        commands
+      when "target"
+        target
+      when "description"
+        description
+      when "exit"
+        goodbye
+      else
+        puts "Whoops! That's not a valid command."
+        commands
+      end#case
+    end#while
   end
-  end
+
 
   def choice
     puts "\nEnter the number of a mission you'd like to learn more about."
@@ -77,6 +77,7 @@ class SpaceMissions::CLI
     puts "\nEnter the number of a mission you'd like to learn more about"
     puts "'list' => to see the list of all missions"
     puts "'target' => search missions by target (planet, universe, etc.)"
+    puts "'description' => search missions by mission description"
     puts "'exit' => exit program"
     puts "\nWhat would you like to do?\n"
     user_says
@@ -92,8 +93,8 @@ class SpaceMissions::CLI
     puts "Landing Date: #{mission.landing_date}" if mission.landing_date
     puts "End Date: #{mission.end_date}" if mission.end_date
     puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
-    puts "Target/s: #{mission.targets.join(", ")}" if mission.targets
-    puts "Destination/s: #{mission.destinations.join(", ")}" if mission.destinations
+    puts "Target/s: #{mission.targets}" if mission.targets
+    puts "Destination/s: #{mission.destinations}" if mission.destinations
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
     puts "Mission web site: #{mission.url}"
@@ -102,14 +103,30 @@ class SpaceMissions::CLI
   end
 
   def target
-    puts "\nFor a list of missions by target, enter target:"
+    puts "For a list of missions by target, enter target:"
     puts "Examples: 'Earth,' 'Mars', 'Universe', 'moon' etc."
-    input=nil
+    input = nil
     while input != "exit"
       input = gets.strip.capitalize
       @list = SpaceMissions::Mission.find_by_target(input)
       if @list == []
-        puts "\nSorry, we don't have any current missions for that target."
+        puts "Sorry, we couldn't find any missions matching your search."
+        commands
+      else
+        display_missions
+      end#else
+    end#while
+  end
+
+  def description
+    puts "To search missions by their descriptions, enter a word or phrase."
+    puts "Examples: 'rover,' 'spectrometer', 'climate', etc."
+    input = nil
+    while input != "exit"
+      input = gets.strip.capitalize
+      @list = SpaceMissions::Mission.find_by_description(input)
+      if @list == []
+        puts "\nSorry, we couldn't find any missions matching your search."
         commands
       else
         display_missions
@@ -121,5 +138,4 @@ class SpaceMissions::CLI
     puts "Thanks for visiting!"
     exit
   end
-
 end

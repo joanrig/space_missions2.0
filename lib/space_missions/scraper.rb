@@ -26,11 +26,14 @@ class SpaceMissions::Scraper
         @key = a[0].downcase.gsub(" ", "_")
         @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
 
-        #type can also have multiple values, but key name should not be types
         if ["target", "destination"].include?(@key)
           @key = "#{@key}s"
-          @value = @value.split(", ")[0..@value.size]
-        end        
+        end
+
+        #type can also have multiple values, but key name should not be types
+        # if ["target", "destination", "type"].include?(@key)
+        #   @value = @value.split(", ")[0..@value.size]
+        # end
 
         mission.send("#{@key}=", @value)
       end  #second do
@@ -42,9 +45,5 @@ class SpaceMissions::Scraper
     @@mission_links
   end
 
-
-  # def self.doc
-  #   @doc
-  # end
 
 end
