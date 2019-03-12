@@ -1,8 +1,8 @@
 class SpaceMissions::Scraper
   attr_accessor :value, :key, :kv
 
-
-  def self.get_jpl_mission_links #initializes new missions
+  #scrape main page for mission links, initialize missions
+  def self.get_jpl_mission_links
     @doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
     slides = @doc.css('ul.articles li.slide')
     slides.each do |slide|
@@ -12,11 +12,9 @@ class SpaceMissions::Scraper
     end
   end
 
-
-  #scrape attributes from slide links, add them to missions instantiated above
+  #scrape attributes from slide links, add to missions
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      #doc = Nokogiri::HTML(open('https://www.jpl.nasa.gov/missions/voyager-1/'))
       doc = Nokogiri::HTML(open(mission.url))
       mission.name = doc.css('.media_feature_title').text.strip
 
@@ -26,14 +24,14 @@ class SpaceMissions::Scraper
         @el = el
         @kv = el.children.children.text.split(":")
         @key = @kv[0].downcase.gsub(" ", "_")
-        set_values
+        format_keys_and_values
         mission.send("#{@key}=", @value)
       end  #second do
     end #first do
   end
 
-  def self.set_values
-    if @key == "launch_date"#edge case: format dates that include times
+  def self.format_keys_and_values#deals with edge cases for both keys and values
+    if @key == "launch_date"
       cal_date = @el.css("p").children[1].text.strip if @el
       time = @el.css("p").children[3].text.strip if @el.css("p").children[3]
       if time
@@ -49,10 +47,6 @@ class SpaceMissions::Scraper
       @key = "#{@key}s"
     end
 
-  end
-
-  def self.mission_links
-    @@mission_links
   end
 
 
