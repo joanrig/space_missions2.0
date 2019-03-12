@@ -1,10 +1,10 @@
 class SpaceMissions::Scraper
-  attr_accessor :value
+  attr_accessor :value, :key
 
 
-  def self.get_jpl_mission_links
-    @@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
-    slides = @@doc.css('ul.articles li.slide')
+  def self.get_jpl_mission_links #initializes new missions
+    @doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
+    slides = @doc.css('ul.articles li.slide')
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
@@ -12,12 +12,8 @@ class SpaceMissions::Scraper
     end
   end
 
-  def value
-    @value
-  end
 
-
-  #scrape attributes from slide links
+  #scrape attributes from slide links, add them to missions instantiated above
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
@@ -30,10 +26,11 @@ class SpaceMissions::Scraper
         @key = a[0].downcase.gsub(" ", "_")
         @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
 
+        #type can also have multiple values, but key name should not be types
         if ["target", "destination"].include?(@key)
           @key = "#{@key}s"
           @value = @value.split(", ")[0..@value.size]
-        end
+        end        
 
         mission.send("#{@key}=", @value)
       end  #second do
@@ -46,8 +43,8 @@ class SpaceMissions::Scraper
   end
 
 
-  def self.doc
-    @@doc
-  end
+  # def self.doc
+  #   @doc
+  # end
 
 end

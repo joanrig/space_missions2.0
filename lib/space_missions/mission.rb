@@ -13,7 +13,7 @@ class SpaceMissions::Mission
 
   def self.set_targets(targets)#passing in value from scraper
     targets = []<< targets if targets.is_a? String
-    targets.each do |target| #handles strings with one or many targets
+    targets.each do |target| #handles strings with either one or many targets
       target = SpaceMissions::Target.find_or_create_by_name(name)
       @@targets << target
       SpaceMissions::Target.missions << self
@@ -23,7 +23,7 @@ class SpaceMissions::Mission
 
 
   def self.find_by_target(input)
-    missions = @@all.select {|mission| mission.targets.include?(input.capitalize) if mission.targets} if input
+    missions = @@all.select {|mission| mission.targets.include?(input.capitalize) if mission.targets}
   end
 
 

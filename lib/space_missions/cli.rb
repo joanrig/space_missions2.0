@@ -31,25 +31,23 @@ class SpaceMissions::CLI
     end
 
     puts "\nEnter the number of the mission you'd like to learn more about."
+    while input != "exit"
     input = gets.strip
     if input.to_i > 0
-      select_mission
-    else
-      "Sorry, that number is not on the list."
+      mission = @list[input.to_i - 1]
+      show_info(mission)
+    elsif input == "exit"
+      puts "Sorry, that number is not on the list."
       commands
     end
-  end
-
-  def select_mission(input=nil)
-    mission = @list[input.to_i - 1]
-    show_info(mission)
   end
 
   def user_says(input=nil)
   while input != "exit"
     input = gets.strip.downcase
     if input.to_i > 0
-      select_mission
+      mission = @list[input.to_i - 1]
+      show_info(mission)
     end
 
     case input
@@ -59,7 +57,7 @@ class SpaceMissions::CLI
       commands
     when "target"
       target
-    when "exit" || "exit!"
+    when "exit"
       goodbye
     else
       puts "Whoops! That's not a valid command."
