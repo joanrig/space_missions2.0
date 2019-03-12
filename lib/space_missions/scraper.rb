@@ -1,5 +1,5 @@
 class SpaceMissions::Scraper
-  attr_accessor :value, :key
+  attr_accessor :value, :key, :kv
 
 
   def self.get_jpl_mission_links #initializes new missions
@@ -16,32 +16,40 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links, add them to missions instantiated above
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      doc = Nokogiri::HTML(open('https://www.jpl.nasa.gov/missions/voyager-1/'))
-      #doc = Nokogiri::HTML(open(mission.url))
+      #doc = Nokogiri::HTML(open('https://www.jpl.nasa.gov/missions/voyager-1/'))
+      doc = Nokogiri::HTML(open(mission.url))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
       attributes.each do |el|
-        a = el.children.children.text.split(":")
-        @key = a[0].downcase.gsub(" ", "_")
-          if @key == "launch_date"#edge case: format dates that include times
-            cal_date = el.css("p").children[1].text.strip
-            time = el.css("p").children[3].text.strip
-            @value = "#{cal_date}, #{time}"
-          else
-            @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
-          end
-
-          if ["target", "destination"].include?(@key)
-            @key = "#{@key}s"
-          end
-
+        @el = el
+        @kv = el.children.children.text.split(":")
+        @key = @kv[0].downcase.gsub(" ", "_")
+        set_values
         mission.send("#{@key}=", @value)
       end  #second do
     end #first do
   end
 
+  def self.set_values
+    if @key == "launch_date"#edge case: format dates that include times
+      cal_date = @el.css("p").children[1].text.strip if @el
+      time = @el.css("p").children[3].text.strip if @el.css("p").children[3]
+      if time
+        @value = "#{cal_date}, #{time}"
+      else
+        @value = "#{cal_date}"
+      end
+    else
+      @value = @kv[1...(@kv.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
+    end
+
+    if ["target", "destination"].include?(@key)
+      @key = "#{@key}s"
+    end
+
+  end
 
   def self.mission_links
     @@mission_links
