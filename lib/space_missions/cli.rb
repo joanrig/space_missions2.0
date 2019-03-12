@@ -14,7 +14,6 @@ class SpaceMissions::CLI
     sleep(2)
     puts "Give us just a few more seconds to search the universe ..."
     SpaceMissions::Scraper.get_attributes
-    SpaceMissions::Mission.set_targets
   end
 
   def list_all_missions
@@ -34,7 +33,7 @@ class SpaceMissions::CLI
     user_says
   end
 
-  def user_says(input=nil)    
+  def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
       if input.to_i > 0
