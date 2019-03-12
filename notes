@@ -36,7 +36,18 @@ __________________________________________________________________
 
 TO DO
 fix formatting of dates ie "Launch Date: June 20, 200812,46 a.m. PDT (07,46 UTC)"
-get Mission.set_targets working
+
+[21] pry(SpaceMissions::Scraper)> attributes[2].css("p").children[1].text
+=> "\n\t\t\t\t\t\t\t\t\t  September 05, 1977"
+[22] pry(SpaceMissions::Scraper)> attributes[2].css("p").children[1].text.strip
+=> "September 05, 1977"
+[23] pry(SpaceMissions::Scraper)> attributes[2].css("p").children[2].text.strip
+
+=> ""
+[24] pry(SpaceMissions::Scraper)> attributes[2].css("p").children[3].text.strip
+=> "8:56 a.m. EDT (12:56 UTC)"
+
+-- removed targets instead, as class was not useful for this app/ get Mission.set_targets working
 *fix CLI so after missions are listed, you have the choice of other commands besides picking a mission number or exiting.
 
 

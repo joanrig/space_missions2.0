@@ -25,18 +25,17 @@ class SpaceMissions::Scraper
       attributes.each do |el|
         a = el.children.children.text.split(":")
         @key = a[0].downcase.gsub(" ", "_")
-          #if key = date etc.
-        @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
-        binding.pry
+          if @key == "launch_date"#edge case: format dates that include times
+            cal_date = el.css("p").children[1].text.strip
+            time = el.css("p").children[3].text.strip
+            @value = "#{cal_date}, #{time}"
+          else
+            @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
+          end
 
-        if ["target", "destination"].include?(@key)
-          @key = "#{@key}s"
-        end
-
-        #type can also have multiple values, but key name should not be types
-        # if ["target", "destination", "type"].include?(@key)
-        #   @value = @value.split(", ")[0..@value.size]
-        # end
+          if ["target", "destination"].include?(@key)
+            @key = "#{@key}s"
+          end
 
         mission.send("#{@key}=", @value)
       end  #second do
