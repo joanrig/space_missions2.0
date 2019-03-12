@@ -21,7 +21,6 @@ class SpaceMissions::Scraper
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
-      #doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/voyager-2/"))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
@@ -31,16 +30,12 @@ class SpaceMissions::Scraper
         @key = a[0].downcase.gsub(" ", "_")
         @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
 
-        #changed key name b/c missions have many targets and destinations
-        #if value includes many targets, make each one a value of mission.target
-        #ideally: instantiate each target as an object in Target class, which has many missions
         if ["target", "destination"].include?(@key)
           @key = "#{@key}s"
           @value = @value.split(", ")[0..@value.size]
         end
 
         mission.send("#{@key}=", @value)
-        #binding.pry
       end  #second do
     end #first do
   end

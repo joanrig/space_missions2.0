@@ -30,6 +30,9 @@ class SpaceMissions::CLI
     choice
   end
 
+  # def select_mission(input=nil)
+  # end
+
   def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
@@ -40,24 +43,24 @@ class SpaceMissions::CLI
       end
 
       case input
-      when "list"
+      when "list_missions"
         list_missions
       when "commands"
         commands
       when "target"
         target
-      when "exit" || "exit!"
+      when "exit"
         goodbye
       else
         puts "Whoops! That's not a valid command."
         commands
-      end
-    end
+      end#else
+    end#while
   end
 
+
   def choice
-    puts ""
-    puts "Enter the number of a mission you'd like to learn more about."
+    puts "\nEnter the number of a mission you'd like to learn more about."
     puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
     user_says
   end
@@ -82,8 +85,8 @@ class SpaceMissions::CLI
     puts "Landing Date: #{mission.landing_date}" if mission.landing_date
     puts "End Date: #{mission.end_date}" if mission.end_date
     puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
-    puts "Targets: #{mission.targets}" if mission.targets
-    puts "Destinations: #{mission.destinations}" if mission.destinations
+    puts "Target/s: #{mission.targets.join(", ")}" if mission.targets
+    puts "Destination/s: #{mission.destinations.join(", ")}" if mission.destinations
     puts "Current Location: #{mission.current_location}" if mission.current_location
     puts "Altitude: #{mission.altitude}" if mission.altitude
     puts ""
@@ -91,25 +94,26 @@ class SpaceMissions::CLI
   end
 
   def target
-    puts "For a list of missions by planet or universe, enter planet name or 'universe'"
+    puts "\nFor a list of missions by target, enter planet name or 'universe'"
     input=nil
     while input != "exit"
       input = gets.strip.capitalize
-
       @missions_by_target = SpaceMissions::Mission.find_by_target(input)
       if @missions_by_target == []
-        puts "Sorry, we did not find any missions for that target."
+        puts "\nSorry, we don't have any current missions for that target."
         commands
       else
         @missions_by_target.each.with_index(1) do |mission, index|
           puts "#{index}. #{mission.name}"
-        end
+        end#do
 
         puts "\nEnter the number of the mission you'd like to learn more about"
         input = gets.strip
         if input.to_i > 0
           mission = @missions_by_target[input.to_i - 1]
           show_info(mission)
+        else
+          commands
         end
       end#else
     end#while
