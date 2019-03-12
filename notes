@@ -10,13 +10,7 @@ targets have many missions
 missions can have multiple targets
 
 
-missions have attributes
-:name,
-:type (orbital, lander or rover)
-:launch date
-:instrument cluster [inst 1, inst 2 …]
-:description
-:url
+
 
 
 __________________________________________________________________
@@ -33,11 +27,20 @@ get full description
 
 
     extras
-type in mars return all missions that target mars
+- done - type in mars return all missions that target mars
 type in mission.targets to get all targets for a mission
 etc.
 
 __________________________________________________________________
+
+
+TO DO
+fix formatting of dates ie "Launch Date: June 20, 200812,46 a.m. PDT (07,46 UTC)"
+get Mission.set_targets working
+*fix CLI so after missions are listed, you have the choice of other commands besides picking a mission number or exiting.
+
+
+____________________________________________________________
 
 possible future features:
 search missions by launch, landing date or type

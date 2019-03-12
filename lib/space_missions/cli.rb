@@ -65,7 +65,6 @@ class SpaceMissions::CLI
     end#while
   end
 
-
   def choice
     puts "\nEnter the number of a mission you'd like to learn more about."
     puts "You can also type 'commands' for more options, or 'exit' to quit this program'"

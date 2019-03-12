@@ -10,11 +10,12 @@ class SpaceMissions::Mission
 
   #i would like to be able to set up targets as their own objects that collab. with missions
   #so missions can have many targets and vice versa
-
+  #not working!!!
   def self.set_targets
     puts "hello from Mission.set_targets"
     @targets = []<< @targets if @targets.is_a? String
-    if @targets
+            binding.pry
+    if @targets=> nil
       @targets.each do |target| #handles strings with either one or many targets
         target = SpaceMissions::Target.find_or_create_by_name(target)
         @@targets << target
