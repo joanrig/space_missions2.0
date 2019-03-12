@@ -16,7 +16,8 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links, add them to missions instantiated above
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      doc = Nokogiri::HTML(open(mission.url))
+      doc = Nokogiri::HTML(open('https://www.jpl.nasa.gov/missions/voyager-1/'))
+      #doc = Nokogiri::HTML(open(mission.url))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
@@ -24,7 +25,9 @@ class SpaceMissions::Scraper
       attributes.each do |el|
         a = el.children.children.text.split(":")
         @key = a[0].downcase.gsub(" ", "_")
+          #if key = date etc.
         @value = a[1...(a.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
+        binding.pry
 
         if ["target", "destination"].include?(@key)
           @key = "#{@key}s"

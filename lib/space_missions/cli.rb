@@ -30,11 +30,11 @@ class SpaceMissions::CLI
         puts "#{index}. #{mission.acronym} - #{mission.name}"
       end
     end
+    puts "\nPlease enter the number of a mission you'd like to learn more about."
     user_says
   end
 
-  def user_says(input=nil)
-    "Please enter the number of a mission you'd like to learn more about."
+  def user_says(input=nil)    
     while input != "exit"
       input = gets.strip.downcase
       if input.to_i > 0
@@ -43,7 +43,8 @@ class SpaceMissions::CLI
           show_info(mission)
         else
           puts "That's not a mission number. Please check your reading glasses ;) and try again."
-          commands
+          sleep(3)
+          display_missions
         end
       end
 
