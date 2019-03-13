@@ -55,7 +55,7 @@ class SpaceMissions::CLI
       when "target"
         target
       when "launch"
-        launch_year
+        launched_since
       when "description"
         description
       when "exit"
@@ -107,56 +107,48 @@ class SpaceMissions::CLI
   def target
     puts "For a list of missions by target, enter target:"
     puts "Examples: 'Earth,' 'Mars', 'Universe', 'moon' etc."
-    input = nil
-    while input != "exit"
-      input = gets.strip.capitalize
-      @list = SpaceMissions::Mission.find_by_target(input)
-      if @list == []
-        puts "Sorry, we couldn't find any missions matching your search."
-        commands
-      else
-        display_missions
-      end#else
-    end#while
+    process_input("find_by_target")
   end
 
   def description
     puts "To search missions by their descriptions, enter a word or phrase."
     puts "Examples: 'rover,' 'spectrometer', 'climate', etc."
-    input = nil
-    while input != "exit"
-      input = gets.strip.capitalize
-      @list = SpaceMissions::Mission.find_by_description(input)
-      if @list == []
-        puts "\nSorry, we couldn't find any missions matching your search."
-        commands
-      else
-        display_missions
-      end#else
-    end#while
+    process_input("find_by_description")
   end
 
-  def launch_year
-    puts "To search missions that have launched since <year> enter a year:"
-    puts "Example:'1983'"
+  def launched_since
+    puts "Enter a year to search missions that have launched since that year"
+    puts "Example:'1983' will return missions launched after Dec. 31, 1983"
     input = nil
     while input != "exit"
       input = gets.strip
-
       if input.to_i > 999 && input.to_i < 9999
-        @list = SpaceMissions::Mission.find_by_launch_year(input)
-        if @list == []
-          puts "\nSorry, we couldn't find any missions matching your search."
-          commands
-        else
-          puts "\nHere's a list of all current JPL missions that have launched since(input)\n."
-          display_missions
-        end#2nd if
+        search_results
       else
         puts "That's not a valid year."  #figure out how to let them guess again.
         commands
       end#1st if
     end#while
+  end
+
+#helper methods process_input & search_results
+  def process_input(method)
+    input = nil
+    while input != "exit"
+      input = gets.strip.capitalize
+      @list = SpaceMissions::Mission.send(method, input)
+      search_results
+    end#while
+  end
+
+  def search_results
+    if @list == []
+      puts "\nSorry, we couldn't find any missions matching your search."
+      commands
+    else
+      puts ""
+      display_missions
+    end
   end
 
   def goodbye
