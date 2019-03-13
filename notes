@@ -1,13 +1,8 @@
 Notes
 
-SpaceMissions CLI gem
-space agencies = artists (JPL, NASA Goddard)
-mission = songs
-planets = genres
+Here is a screencast of me developing a method for searching missions by launch year.
+https://www.useloom.com/share/caa4d8afc1c2445bacb794a0cdbdd6cb
 
-
-targets have many missions
-missions can have multiple targets
 
 
 
@@ -20,7 +15,7 @@ user types space-missions - that starts program
 
 Welcome to Space Missions!
 
-automatically load  a list of NASA JPL current space missions
+automatically load  a list of NASA JPL's current space missions
 pick  mission
 type number
 get full description
@@ -28,13 +23,14 @@ get full description
 
     extras
 - done - type in mars return all missions that target mars
-type in mission.targets to get all targets for a mission
-etc.
+
 
 __________________________________________________________________
 
 
 TO DO
+
+
 --done fix formatting of dates ie "Launch Date: June 20, 200812,46 a.m. PDT (07,46 UTC)"
 
 [21] pry(SpaceMissions::Scraper)> attributes[2].css("p").children[1].text
@@ -50,29 +46,78 @@ TO DO
 -- removed targets instead, as class was not useful for this app/ get Mission.set_targets working
 -- done fix CLI so after missions are listed, you have the choice of other commands besides picking a mission number or exiting.
 
+--------
+cli mods
+#### search by
+  def target
+    puts "For a list of missions by target, enter target:"
+    puts "Examples: 'Earth,' 'Mars', 'Universe', 'moon' etc."
+    process_input("find_by_target")
+  end
+
+  def description
+    puts "To search missions by their descriptions, enter a word or phrase."
+    puts "Examples: 'rover,' 'spectrometer', 'climate', etc."
+    process_input("find_by_description")
+  end
+
+  def launched_since
+    puts "Enter a year to search missions that have launched since that year"
+    puts "Example:'1983' will return missions launched after Dec. 31, 1983"
+    input = nil
+    while input != "exit"
+      input = gets.strip
+      if input.to_i > 999 && input.to_i < 9999
+        search_results
+      else
+        puts "That's not a valid year."  #figure out how to let them guess again.
+        commands
+      end#1st if
+    end#while
+  end
+
+#helper methods process_input & search_results
+  def process_input(method)
+    input = nil
+    while input != "exit"
+      input = gets.strip.capitalize
+      @list = SpaceMissions::Mission.send(method, input)
+      search_results
+    end#while
+  end
+
+  def search_results
+    if @list == []
+      puts "\nSorry, we couldn't find any missions matching your search."
+      commands
+    else
+      puts ""
+      display_missions
+    end
+  end
+
 
 ____________________________________________________________
 
 possible future features:
+
+sort by launch_year
+# def self.sort_by_launch_year
+#   @launch_year = self.launch_date.scan(/\d{4}/)[0].to_i
+#   sorted = @@all.sort_by(&:launch_year)
+#   binding.pry
+# end
+
 search missions by launch, landing date or type
 
 add to user_says
 
 #elsif input == "type"
 #  SpaceMissions::Mission.type
-# elsif input == "launch"
-#   SpaceMissions::Mission.launch
-# elsif input == "end"
-#   SpaceMissions::Mission.end
+
 
 add to mission class:
 #futre featues
 # def self.find_by_launch_date(input)
 #   missions = @@all.select {|mission| mission.launch_date.split.last == input}
 # end
-#
-# def self.find_by_end_date(input)
-#   missions = @@all.select {|mission| (mission.end_date || mission.mission.end.date).split.last == input}
-#end
-
-establish separate classes for Type
