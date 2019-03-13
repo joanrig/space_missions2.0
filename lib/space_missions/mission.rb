@@ -1,5 +1,5 @@
 class SpaceMissions::Mission
-  attr_accessor  :acronym, :altitude, :attributes, :current_location, :description, :destinations, :end_date, :info, :landing_date, :launch_date, :launch_location, :mission_end_date, :name, :number, :status, :targets, :type, :url
+  attr_accessor  :acronym, :altitude, :attributes, :current_location, :description, :destinations, :end_date, :info, :landing_date, :launch_date, :launch_location, :launch_year, :mission_end_date, :name, :number, :status, :targets, :type, :url
 
   @@all = [] #all missions
 
@@ -15,10 +15,9 @@ class SpaceMissions::Mission
     missions = @@all.select {|mission| mission.description.downcase.include?(input.downcase) if mission.description}
   end
 
-  def self.find_by_launch_year(input)#find missions since ie greater than input year
+  def self.launched_since(input)#year
     missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > input.to_i}
   end
-
 
   def self.all
     @@all
