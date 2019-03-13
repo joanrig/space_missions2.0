@@ -15,6 +15,11 @@ class SpaceMissions::Mission
     missions = @@all.select {|mission| mission.description.downcase.include?(input.downcase) if mission.description}
   end
 
+  
+
+
+
+
   def self.all
     @@all
   end

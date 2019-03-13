@@ -15,7 +15,8 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links, add to missions
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      doc = Nokogiri::HTML(open(mission.url))
+      #doc = Nokogiri::HTML(open(mission.url))
+      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/"))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
@@ -31,13 +32,15 @@ class SpaceMissions::Scraper
   end
 
   def self.format_keys_and_values#deals with edge cases for both keys and values
-    if @key == "launch_date"
+    if @key.include?("date")
+      #binding.pry
       cal_date = @el.css("p").children[1].text.strip if @el
       time = @el.css("p").children[3].text.strip if @el.css("p").children[3]
       if time
         @value = "#{cal_date}, #{time}"
       else
         @value = "#{cal_date}"
+
       end
     else
       @value = @kv[1...(@kv.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")
@@ -46,8 +49,5 @@ class SpaceMissions::Scraper
     if ["target", "destination"].include?(@key)
       @key = "#{@key}s"
     end
-
   end
-
-
 end
