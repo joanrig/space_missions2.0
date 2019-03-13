@@ -29,23 +29,26 @@ class SpaceMissions::CLI
         puts "#{index}. #{mission.acronym} - #{mission.name}"
       end
     end
-    puts "\nPlease enter the number of a mission you'd like to learn more about."
-    user_says
+    choice
+  end
+
+  def select_mission(input)
+    if input.to_i > 0
+      mission = @list[input.to_i - 1]
+      if mission
+        show_info(mission)
+      else
+        puts "That's not a mission number. Please check your reading glasses ;) and try again."
+        sleep(3)
+        display_missions
+      end
+    end
   end
 
   def user_says(input=nil)
     while input != "exit"
       input = gets.strip.downcase
-      if input.to_i > 0
-        mission = @list[input.to_i - 1]
-        if mission
-          show_info(mission)
-        else
-          puts "That's not a mission number. Please check your reading glasses ;) and try again."
-          sleep(3)
-          display_missions
-        end
-      end
+      select_mission(input)
 
       case input
       when "list"
@@ -123,6 +126,7 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip
       if input.to_i > 999 && input.to_i < 9999
+        @list = SpaceMissions::Mission.launched_since(input)
         search_results
       else
         puts "That's not a valid year."  #figure out how to let them guess again.
