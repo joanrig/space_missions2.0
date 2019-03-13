@@ -2,7 +2,7 @@ class SpaceMissions::Scraper
   attr_accessor :value, :key, :kv
 
   #scrape main page for mission links, initialize missions
-  def self.get_jpl_mission_links
+  def get_jpl_mission_links
     @doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
     slides = @doc.css('ul.articles li.slide')
     slides.each do |slide|
@@ -13,10 +13,9 @@ class SpaceMissions::Scraper
   end
 
   #scrape attributes from slide links, add to missions
-  def self.get_attributes
+  def get_attributes
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
-      #doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/"))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box
@@ -31,7 +30,7 @@ class SpaceMissions::Scraper
     end #first do
   end
 
-  def self.format_keys_and_values#deals with edge cases for both keys and values
+  def format_keys_and_values#deals with edge cases for both keys and values
     if @key.include?("date")
       #binding.pry
       cal_date = @el.css("p").children[1].text.strip if @el
@@ -40,7 +39,6 @@ class SpaceMissions::Scraper
         @value = "#{cal_date}, #{time}"
       else
         @value = "#{cal_date}"
-
       end
     else
       @value = @kv[1...(@kv.size)].map{|val| val.gsub(/[\r]|[\n]/, "").strip}.join(",")

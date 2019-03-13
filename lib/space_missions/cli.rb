@@ -9,11 +9,11 @@ class SpaceMissions::CLI
   end
 
   def get_data
-    SpaceMissions::Scraper.get_jpl_mission_links
+    SpaceMissions::Scraper.new.get_jpl_mission_links
     puts "\n... Hang on, we're getting data from #{SpaceMissions::Mission.all.size} missions for you!"
     sleep(2)
     puts "Give us just a few more seconds to search the universe ..."
-    SpaceMissions::Scraper.get_attributes
+    SpaceMissions::Scraper.new.get_attributes
   end
 
   def list_all_missions
@@ -39,7 +39,7 @@ class SpaceMissions::CLI
         show_info(mission)
       else
         puts "That's not a mission number. Please check your reading glasses ;) and try again."
-        sleep(3)
+        sleep(2)
         display_missions
       end
     end
@@ -58,7 +58,7 @@ class SpaceMissions::CLI
       when "target"
         target
       when "launch"
-        launched_since
+        launched_when
       when "description"
         description
       when "exit"
@@ -119,20 +119,30 @@ class SpaceMissions::CLI
     process_input("find_by_description")
   end
 
-  def launched_since
-    puts "Enter a year to search missions that have launched since that year"
-    puts "Example:'1983' will return missions launched after Dec. 31, 1983"
+  def launched_when
     input = nil
     while input != "exit"
-      input = gets.strip
-      if input.to_i > 999 && input.to_i < 9999
-        @list = SpaceMissions::Mission.launched_since(input)
-        search_results
+      puts "Enter 'before' or 'after' and a year."
+      puts "Examples:"
+      puts "'after 2005' will return missions launched after Dec. 31, 2004."
+      puts "'before 1980' will return missions launched before Jan. 1, 1981."
+
+      input = gets.strip.split
+      if input[1].to_i > 999 && input[1].to_i < 9999
+        if ["before", "after"].include?(input[0].downcase)
+          parameter = input[0]
+          year = input[1]
+          @list = SpaceMissions::Mission.launched(parameter, year)
+          #binding.pry
+          search_results
+        else
+          puts "Please enter either 'before' or 'after' before you enter a year."
+        end
       else
         puts "That's not a valid year."  #figure out how to let them guess again.
-        commands
       end#1st if
     end#while
+    commands
   end
 
 #helper methods process_input & search_results
