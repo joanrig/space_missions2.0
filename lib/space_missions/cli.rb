@@ -54,6 +54,8 @@ class SpaceMissions::CLI
         commands
       when "target"
         target
+      when "launch"
+        launch_year
       when "description"
         description
       when "exit"
@@ -76,6 +78,7 @@ class SpaceMissions::CLI
     puts "\nEnter the number of a mission you'd like to learn more about"
     puts "'list' => to see the list of all missions"
     puts "'target' => search missions by target (planet, universe, etc.)"
+    puts "'launch' => search missions by launch date"
     puts "'description' => search missions by mission description"
     puts "'exit' => exit program"
     puts "\nWhat would you like to do?\n"
@@ -130,6 +133,29 @@ class SpaceMissions::CLI
       else
         display_missions
       end#else
+    end#while
+  end
+
+  def launch_year
+    puts "To search missions that have launched since <year> enter a year:"
+    puts "Example:'1983'"
+    input = nil
+    while input != "exit"
+      input = gets.strip
+
+      if input.to_i > 999 && input.to_i < 9999
+        @list = SpaceMissions::Mission.find_by_launch_year(input)
+        if @list == []
+          puts "\nSorry, we couldn't find any missions matching your search."
+          commands
+        else
+          puts "\nHere's a list of all current JPL missions that have launched since(input)\n."
+          display_missions
+        end#2nd if
+      else
+        puts "That's not a valid year."  #figure out how to let them guess again.
+        commands
+      end#1st if
     end#while
   end
 

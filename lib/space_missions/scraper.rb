@@ -15,8 +15,8 @@ class SpaceMissions::Scraper
   #scrape attributes from slide links, add to missions
   def self.get_attributes
     SpaceMissions::Mission.all.each do |mission|
-      #doc = Nokogiri::HTML(open(mission.url))
-      doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/"))
+      doc = Nokogiri::HTML(open(mission.url))
+      #doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/"))
       mission.name = doc.css('.media_feature_title').text.strip
 
       #from fast_facts box

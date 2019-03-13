@@ -15,9 +15,9 @@ class SpaceMissions::Mission
     missions = @@all.select {|mission| mission.description.downcase.include?(input.downcase) if mission.description}
   end
 
-  
-
-
+  def self.find_by_launch_year(input)#find missions since ie greater than input year
+    missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > input.to_i}
+  end
 
 
   def self.all
