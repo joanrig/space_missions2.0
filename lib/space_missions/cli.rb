@@ -51,6 +51,7 @@ class SpaceMissions::CLI
   def show_info(mission)
     puts "\nFast facts about #{mission.name}:"
     puts "\nAcronym: #{mission.acronym}" if mission.acronym
+    puts "Status: #{mission.status}" if mission.status
     puts "Description: #{mission.description}" #if mission.description
     puts "Type: #{mission.type}" if mission.type
     puts "Launch Date: #{mission.launch_date}" if mission.launch_date
@@ -88,8 +89,10 @@ class SpaceMissions::CLI
       select_mission(input)
 
       case input
-      when "list"
+      when "all"
         list_all_missions
+      when "status"
+        status
       when "commands"
         commands
       when "target"
@@ -116,9 +119,10 @@ class SpaceMissions::CLI
   end
 
   def commands
-    puts "\nPlease type a command:"
-    puts "\nEnter the number of a mission you'd like to learn more about"
-    puts "'list' => to see the list of all missions"
+    puts "\nEnter the number of a mission you'd like to learn more about."
+    puts "or, enter one of these commands:"
+    puts "\n'all' => see the list of all JPL missions ever"
+    puts "'status' => search missions by status (past, present, future)"
     puts "'target' => search missions by target (planet, universe, etc.)"
     puts "'launch' => search missions by launch date"
     puts "'description' => search missions by mission description"
@@ -144,10 +148,17 @@ class SpaceMissions::CLI
     process_input("find_by_description")
   end
 
+  def status
+    puts "To search missions by status, enter a word or phrase."
+    puts "Examples: 'past', 'current', 'future' "
+    puts ""
+    process_input("find_by_status")
+  end
+
   def process_input(method)
     input = nil
     while input != "exit"
-      input = gets.strip.capitalize
+      input = gets.strip
       @list = SpaceMissions::Mission.send(method, input)
       search_results
     end#while

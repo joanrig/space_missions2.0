@@ -2,6 +2,7 @@ class SpaceMissions::Mission
   attr_accessor  :acronym, :altitude, :attributes, :current_location, :description, :destinations, :end_date, :info, :landing_date, :launch_date, :launch_location, :launch_year, :mission_end_date, :name, :number, :status, :targets, :type, :url
 
   @@all = [] #all missions
+  @@current = []
 
   def initialize
     @@all << self
@@ -13,6 +14,10 @@ class SpaceMissions::Mission
 
   def self.find_by_description(input)
     missions = @@all.select {|mission| mission.description.downcase.include?(input.downcase) if mission.description}
+  end
+
+  def self.find_by_status(input)
+    missions = @@all.select {|mission| mission.status == input.capitalize if mission.status}
   end
 
   def self.launched(parameter, year, end_year=nil)
@@ -34,5 +39,6 @@ class SpaceMissions::Mission
   def self.all
     @@all
   end
+
 
 end
