@@ -73,6 +73,7 @@ class SpaceMissions::CLI
   def choice
     puts "\nEnter the number of a mission you'd like to learn more about."
     puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
+    puts ""
     user_says
   end
 
@@ -122,24 +123,44 @@ class SpaceMissions::CLI
   def launched_when
     input = nil
     while input != "exit"
-      puts "Enter 'before' or 'after' and a year."
+      puts "Tell us which way you'd like to search:"
       puts "Examples:"
-      puts "'after 2005' will return missions launched after Dec. 31, 2004."
-      puts "'before 1980' will return missions launched before Jan. 1, 1981."
+      puts "\n'after 2005' => missions launched after Dec. 31, 2004"
+      puts "'before 1980' => missions launched before Jan. 1, 1981"
+      puts "'between' => to search missions launched during a range of years"
 
+      #before and after
       input = gets.strip.split
       if input[1].to_i > 999 && input[1].to_i < 9999
         if ["before", "after"].include?(input[0].downcase)
           parameter = input[0]
           year = input[1]
           @list = SpaceMissions::Mission.launched(parameter, year)
-          #binding.pry
           search_results
         else
-          puts "Please enter either 'before' or 'after' before you enter a year."
+          puts "That's not a valid year."
+          commands
         end
+
+      #between
+      elsif "between" == input[0].downcase
+        while input != "exit"
+          puts "Enter the range of years you\'d like to search\n"
+          puts "Example:"
+          puts "'2004 to 2009' will return all missions that launched during the years 2005-2008."
+          years = gets.strip.split("to")
+          start_year = years[0].to_i
+          end_year = years[1].to_i
+          if start_year < end_year
+            @list = SpaceMissions::Mission.launched("between", start_year, end_year)
+            search_results
+          else
+            puts "Your starting year should come before your ending year."
+            commands
+          end
+        end#2nd while
       else
-        puts "That's not a valid year."  #figure out how to let them guess again.
+        puts "I didn\'t understand."
       end#1st if
     end#while
     commands
@@ -169,4 +190,5 @@ class SpaceMissions::CLI
     puts "Thanks for visiting!"
     exit
   end
+
 end

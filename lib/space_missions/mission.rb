@@ -19,13 +19,18 @@ class SpaceMissions::Mission
   #   missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > input.to_i}
   # end
 
-  def self.launched(parameter, year)
-    if parameter == "before"
-      missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < year.to_i}
-      #binding.pry
-    elsif parameter == "after"
+  def self.launched(parameter, year, end_year=nil)
+    if parameter == "after"
       missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > year.to_i}
+      
+    elsif parameter == "before"
+        missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < year.to_i}
+    elsif parameter == "between"
+      later = missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > year}
+      before = missions = @@all.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < end_year}
+      missions = before & later
     end
+
   end
 
   def self.all
