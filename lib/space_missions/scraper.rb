@@ -30,7 +30,8 @@ class SpaceMissions::Scraper
     end #first do
   end
 
-  def format_keys_and_values#deals with edge cases for both keys and values
+#deals with edge cases for both keys and values
+  def format_keys_and_values
     if @key.include?("date")
       cal_date = @el.css("p").children[1].text.strip #if @el
       time = @el.css("p").children[3].text.strip if @el.css("p").children[3]
