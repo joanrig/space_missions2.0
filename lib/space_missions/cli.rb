@@ -121,8 +121,8 @@ class SpaceMissions::CLI
   end
 
   def launched_when
-    input = nil
-    while input != "exit"
+    @input = nil
+    while @input != "exit"
       puts "Tell us which way you'd like to search:"
       puts "Examples:"
       puts "\n'after 2005' => missions launched after Dec. 31, 2004"
@@ -130,27 +130,20 @@ class SpaceMissions::CLI
       puts "'between' => to search missions launched during a range of years"
 
       #before and after
-      input = gets.strip.split
-      if input[1].to_i > 999 && input[1].to_i < 9999
-        if ["before", "after"].include?(input[0].downcase)
-          parameter = input[0]
-          year = input[1]
-          @list = SpaceMissions::Mission.launched(parameter, year)
-          search_results
-        else
-          puts "That's not a valid year."
-          commands
-        end
+      @input = gets.strip.split
+      before_or_after
 
       #between
-      elsif "between" == input[0].downcase
-        while input != "exit"
-          puts "Enter the range of years you\'d like to search\n"
-          puts "Example:"
-          puts "'2004 to 2009' will return all missions that launched during the years 2005-2008."
+      if "between" == @input[0].downcase
+        while @input != "exit"
+          puts "Please enter the range of years you\'d like to search"
+          puts "\nExample:"
+          puts "'2004 to 2009' => all missions that launched during the years 2005-2008."
+
           years = gets.strip.split("to")
           start_year = years[0].to_i
           end_year = years[1].to_i
+
           if start_year < end_year
             @list = SpaceMissions::Mission.launched("between", start_year, end_year)
             search_results
@@ -159,11 +152,28 @@ class SpaceMissions::CLI
             commands
           end
         end#2nd while
-      else
-        puts "I didn\'t understand."
-      end#1st if
+      end
+      # else
+      #   puts "I didn\'t understand."
+      #   commands
+      # end#1st if
+
     end#while
     commands
+  end
+
+  def before_or_after
+    if @input[1].to_i > 999 && @input[1].to_i < 9999
+      if ["before", "after"].include?(@input[0].downcase)
+        parameter = @input[0]
+        year = @input[1]
+        @list = SpaceMissions::Mission.launched(parameter, year)
+        search_results
+      else
+        puts "That's not a valid year."
+        commands
+      end
+    end
   end
 
 #helper methods process_input & search_results
