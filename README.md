@@ -2,8 +2,14 @@
 
 Welcome to SpaceMissions gem! This gem scrapes the NASA JPL (National Aeronautics and Space Administration, Jet Propulsion Laboratory) site of current missions. You can use this gem to see a list of missions, pick any mission for more information, or search missions by description, target or launch date.
 
+Here are some links related to this project:
+
+Blog post: Flatiron Week 4: creating my own Ruby gem: a tale of fear and Git
+https://medium.com/me/stats/post/a0103dc6a6e7
+
+
+
 Possible future features:
--make mission links clickable
 -expand to all JPL missions, not just current ones
 
 
