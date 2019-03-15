@@ -2,10 +2,10 @@ class SpaceMissions::Scraper
   attr_accessor :value, :key, :kv
 
   #scrape main page for mission links, initialize missions
-  def get_jpl_mission_links
-    @doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions"))
+  def get_mission_links
+    doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions"))
     #@doc = Nokogiri::HTML(open("https://www.jpl.nasa.gov/missions/?type=current"))
-    slides = @doc.css('ul.articles li.slide')
+    slides = doc.css('ul.articles li.slide')
     slides.each do |slide|
       mission = SpaceMissions::Mission.new
       mission.url = slide.css('a').attribute('href').value.gsub("http", "https")
