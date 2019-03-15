@@ -3,7 +3,7 @@ class SpaceMissions::CLI
 
   def call
     get_data
-    start_new_search
+    new_search
     user_says
   end
 
@@ -15,13 +15,14 @@ class SpaceMissions::CLI
     puts "Give us just a few more seconds to search the universe ..."
     puts ""
     sleep(2)
-    puts "it's a big universe ..."
+    puts "It's a big universe ... Try naming the planets in reverse order while you wait ..."
+    puts "We'll be done before you can say 'Mars!'"
     SpaceMissions::Scraper.new.get_attributes
   end
 
 #*******************   get/list missions methods ***************
 
-  def start_new_search
+  def new_search
     puts ""
     puts "Which set of JPL's missions would you like to explore?"
     puts "Try one of these:"
@@ -46,7 +47,7 @@ class SpaceMissions::CLI
         puts ""
         puts "I didn't understand that. Please try again."
         puts ""
-        commands
+        new_search
       end
     end
   end
@@ -97,6 +98,7 @@ class SpaceMissions::CLI
     puts ""
 
     puts "Would you like to visit this mission\'s website? Type 'Yes' or 'No'"
+    puts "You can also type 'commands' for more options, or 'exit'"
     puts ""
     input = nil
     while input != "exit"
@@ -104,8 +106,11 @@ class SpaceMissions::CLI
       if input.capitalize == 'Yes'
         mission.open_in_browser
         choice
+      elsif input == 'exit'
+        goodbye
       else
-        commands
+        "Hmm .. not sure what you meant."
+        new_search
       end
     end
     commands
@@ -130,7 +135,7 @@ class SpaceMissions::CLI
       when "description"
         description
       when "new"
-        start_new_search
+        new_search
       when "exit"
         goodbye
       else
@@ -145,8 +150,7 @@ class SpaceMissions::CLI
   def choice
     puts ""
     puts "Enter the number of a mission you'd like to learn more about."
-    puts ""
-    puts "You can also type 'commands' for ways to narrow your search, or 'exit' to quit this program'"
+    puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
     puts ""
     user_says
   end
@@ -154,9 +158,8 @@ class SpaceMissions::CLI
   def commands
     puts ""
     puts "Enter the number of a mission you'd like to learn more about."
-    puts "or, enter one of these commands to narrow your search results"
+    puts "other options:"
     puts ""
-    puts "'status' => search missions by status (past, present, future)"
     puts "'target' => search missions by target (planet, universe, etc.)"
     puts "'launch' => search missions by launch date"
     puts "'description' => search missions by mission description"
