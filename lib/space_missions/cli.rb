@@ -3,8 +3,7 @@ class SpaceMissions::CLI
 
   def call
     get_data
-    new_search
-    user_says
+    new_search#=> pick by status => display missions => refine search => listen
   end
 
   def get_data
@@ -15,8 +14,13 @@ class SpaceMissions::CLI
     puts "Give us just a few more seconds to search the universe ..."
     puts ""
     sleep(2)
-    puts "It's a big universe ... Try naming the planets in reverse order while you wait ..."
-    puts "We'll be done before you can say 'Mars!'"
+    puts "It's a big universe ..."
+    puts ""
+    puts "Did you know ... that JPL's roots go back to 1936?"
+    puts "That's when a group of researchers at Caltech's Guggenheim Aeronautical Laboratory performed a series of rocket experiments in a dry canyon wash known as Arroyo Seco. They moved out to the valley after an accidental explosion on campus..."
+    puts ""
+    sleep (2)
+    puts "Did you know .... that JPL's has two current missions that launched in 1977? They are the twin Voyager probes ... check them out under 'current' missions ..."
     SpaceMissions::Scraper.new.get_attributes
   end
 
@@ -33,21 +37,23 @@ class SpaceMissions::CLI
     puts "Proposed"
     puts "All"
     puts ""
+    puts "You can also type 'exit' to quit."
+    puts ""
     input = nil
     while input != "exit"
       input = gets.strip.downcase
       if ["past", "current", "future", "proposed"].include?(input)
         list = SpaceMissions::Mission.send("find_by_status", input)
         display_missions(list)
-      elsif
-        input == 'all'
+        refine_search?
+      elsif input == 'all'
         list = SpaceMissions::Mission.all
         display_missions(list)
+        refine_search?
+      elsif input == 'exit'
+        goodbye
       else
-        puts ""
-        puts "I didn't understand that. Please try again."
-        puts ""
-        new_search
+        error
       end
     end
   end
@@ -61,18 +67,15 @@ class SpaceMissions::CLI
         puts "#{index}. #{mission.acronym} - #{mission.name}"
       end
     end
-    choice
   end
 
-  def select_mission(input)
-    if input.to_i > 0
+  def get_mission(input)
+    if input.to_i > 0 && input.to_i < @list.size
       mission = @list[input.to_i - 1]
       if mission
         show_info(mission)
       else
-        puts "That's not a mission number. Please check your reading glasses ;) and try again."
-        sleep(2)
-        display_missions
+        error
       end
     end
   end
@@ -96,38 +99,35 @@ class SpaceMissions::CLI
     puts "Altitude: #{mission.altitude}" if mission.altitude
     puts "Mission web site: #{mission.url}"
     puts ""
+    visit_website?(mission)
+  end
 
+  def visit_website?(mission)
     puts "Would you like to visit this mission\'s website? Type 'Yes' or 'No'"
-    puts "You can also type 'commands' for more options, or 'exit'"
     puts ""
     input = nil
     while input != "exit"
-      input = gets.strip.downcase
-      if input.capitalize == 'Yes'
+    input = gets.strip.downcase
+      if input.downcase == 'yes'
         mission.open_in_browser
-        choice
-      elsif input == 'exit'
-        goodbye
+        search_again?
+      elsif input == 'no'
+        search_again?
       else
-        "Hmm .. not sure what you meant."
-        new_search
+        error
       end
     end
-    commands
+    goodbye if input == 'exit'
   end
 
 #*************************   user interface ********************
 
-  def user_says(input=nil)
+  def listen(input=nil)
     while input != "exit"
       input = gets.strip.downcase
-      select_mission(input)
+      get_mission(input)
 
       case input
-      when "status"
-        status
-      when "commands"
-        commands
       when "target"
         target
       when "launch"
@@ -139,37 +139,37 @@ class SpaceMissions::CLI
       when "exit"
         goodbye
       else
-        puts ""
-        puts "Whoops! That's not a valid command."
-        puts ""
-        commands
+        error
       end#case
     end#while
   end
 
-  def choice
-    puts ""
-    puts "Enter the number of a mission you'd like to learn more about."
-    puts "You can also type 'commands' for more options, or 'exit' to quit this program'"
-    puts ""
-    user_says
+  def error
+    puts "Whoa, are you typing in an alien language?"
+    puts "I didn't understand that."
+    search_again?
   end
 
-  def commands
+  def search_again?
     puts ""
-    puts "Enter the number of a mission you'd like to learn more about."
-    puts "other options:"
+    puts "If you'd like to start a new seach, type 'new'."
+    puts "Or type 'exit' to quit this program'"
+    puts ""
+    listen
+  end
+
+  def refine_search?
+    puts ""
+    puts "If you'd like to refine your search, use one of these commands:"
     puts ""
     puts "'target' => search missions by target (planet, universe, etc.)"
     puts "'launch' => search missions by launch date"
     puts "'description' => search missions by mission description"
-    puts "'new' => start a new search"
-    puts "'exit' => exit program"
     puts ""
-    puts "What would you like to do?"
-    puts ""
-    user_says
+    puts "If not, enter the number of any mission you'd like to learn more about."
+    listen
   end
+
 
 #********search by target or description & helper methods******
 
@@ -189,14 +189,6 @@ class SpaceMissions::CLI
     process_input("find_by_description")
   end
 
-  def status
-    puts ""
-    puts "To search missions by status, enter a word or phrase."
-    puts "Examples: 'past', 'current', 'future' "
-    puts ""
-    process_input("find_by_status")
-  end
-
   def process_input(method)
     input = nil
     while input != "exit"
@@ -211,10 +203,13 @@ class SpaceMissions::CLI
       puts ""
       puts "Sorry, we couldn't find any missions matching your search."
       puts ""
-      commands
+      search_again?
     else
       @list = list
       display_missions(list)
+      puts "Please enter the number of a mission you'd like to learn more about."
+      puts "You can also type exit or 'new' to start a new search."
+      listen
     end
   end
 
@@ -234,15 +229,13 @@ class SpaceMissions::CLI
 
       @input = gets.strip.split
       if !["before", "after", "between"].include?(@input[0])
-        puts ""
-        puts "Sorry, I didn't understand that."
-        puts ""
-        commands
+        error
       else
         launched_before_or_after
         launched_between
       end
     end#while
+    new_search?
   end
 
   def launched_before_or_after
@@ -253,12 +246,10 @@ class SpaceMissions::CLI
         @list = SpaceMissions::Mission.launched(parameter, year)
         search_results
       else
-        puts ""
-        puts "That's not a valid year."
-        puts ""
-        commands
+        error
       end
     end
+    new_search?
   end
 
   def launched_between
@@ -279,10 +270,8 @@ class SpaceMissions::CLI
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
           search_results
         else
-          puts ""
-          puts "Your starting year should come before your ending year."
-          puts ""
-          commands
+          @list = SpaceMissions::Mission.launched("between", start_year, end_year)
+          search_results
         end
       end#2nd while
     end

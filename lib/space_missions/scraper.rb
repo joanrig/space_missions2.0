@@ -18,7 +18,6 @@ class SpaceMissions::Scraper
     SpaceMissions::Mission.all.each do |mission|
       doc = Nokogiri::HTML(open(mission.url))
       mission.name = doc.css('.media_feature_title').text.strip
-
       #from fast_facts box
       attributes = doc.css('ul.fast_facts li')
       attributes.each do |el|
