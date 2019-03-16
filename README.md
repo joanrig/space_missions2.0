@@ -9,6 +9,9 @@ Here are some links related to this project:
 Blog post: Flatiron Week 4: creating my own Ruby gem: a tale of fear and Git
 https://medium.com/me/stats/post/a0103dc6a6e7
 
+Blog post: CLI Gem Part Two: Scope and Flow!
+https://medium.com/p/5a56b6190fa7/edit
+
 
 
 Possible future features:

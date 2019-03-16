@@ -1,13 +1,32 @@
 class SpaceMissions::CLI
   attr_accessor :target, :list, :missions_by_target
 
+
   def call
+    welcome
     get_data
     new_search#=> pick by status => display missions => refine search => listen
   end
 
+  def welcome
+    puts"".center(80).on_white
+    puts"".center(80).on_white
+    puts"".center(80).on_white
+    puts"*************************************".center(80).black.on_white
+    puts "Welcome to JPL's Space Missions!".center(80).black.on_white
+    puts"*************************************".center(80).black.on_white
+    puts"".center(80).black.on_white
+    puts"".center(80).black.on_white
+    puts"This Ruby Gem is based on data from NASA's Jet Propulsion Laboratory.".center(80).black.on_white
+    puts"JPL, based in Los Angeles is one of NASA's three space flight centers.".center(80).black.on_white
+    puts"Welcome to your universe!".center(80).black.on_white
+    puts"".center(80).on_white
+    puts"".center(80).on_white
+    puts"".center(80).blue.on_white
+    puts"".center(80).blue.on_white
+  end
+
   def get_data
-    puts "Welcome to JPL's Space Missions!"
     SpaceMissions::Scraper.new.get_mission_links
     puts "\n... Hang on, we're getting data from #{SpaceMissions::Mission.all.size} missions for you!"
     sleep(2)
@@ -62,9 +81,9 @@ class SpaceMissions::CLI
     @list = list
     @list.each.with_index(1) do |mission, index|
       if mission.acronym == nil
-        puts "#{index}. #{mission.name}"
+        puts "#{index}. #{mission.name}".colorize(:blue)
       else
-        puts "#{index}. #{mission.acronym} - #{mission.name}"
+        puts "#{index}. #{mission.acronym} - #{mission.name}".colorize(:blue)
       end
     end
   end
@@ -82,22 +101,22 @@ class SpaceMissions::CLI
 
   def show_info(mission)
     puts ""
-    puts "Fast facts about #{mission.name}:"
+    puts "Fast facts about #{mission.name}:".colorize(:blue)
     puts ""
-    puts "Acronym: #{mission.acronym}" if mission.acronym
-    puts "Status: #{mission.status}" if mission.status
-    puts "Description: #{mission.description}" #if mission.description
-    puts "Type: #{mission.type}" if mission.type
-    puts "Launch Date: #{mission.launch_date}" if mission.launch_date
-    puts "Launch Location: #{mission.launch_location}" if mission.launch_location
-    puts "Landing Date: #{mission.landing_date}" if mission.landing_date
-    puts "End Date: #{mission.end_date}" if mission.end_date
-    puts "Mission End Date: #{mission.mission_end_date}" if mission.mission_end_date
-    puts "Target/s: #{mission.targets}" if mission.targets
-    puts "Destination/s: #{mission.destinations}" if mission.destinations
-    puts "Current Location: #{mission.current_location}" if mission.current_location
-    puts "Altitude: #{mission.altitude}" if mission.altitude
-    puts "Mission web site: #{mission.url}"
+    puts "Acronym: #{mission.acronym}".colorize(:blue) if mission.acronym
+    puts "Status: #{mission.status}".colorize(:blue) if mission.status
+    puts "Description: #{mission.description}".colorize(:blue) #if mission.description
+    puts "Type: #{mission.type}".colorize(:blue) if mission.type
+    puts "Launch Date: #{mission.launch_date}".colorize(:blue) if mission.launch_date
+    puts "Launch Location: #{mission.launch_location}".colorize(:blue) if mission.launch_location
+    puts "Landing Date: #{mission.landing_date}".colorize(:blue) if mission.landing_date
+    puts "End Date: #{mission.end_date}".colorize(:blue) if mission.end_date
+    puts "Mission End Date: #{mission.mission_end_date}".colorize(:blue) if mission.mission_end_date
+    puts "Target/s: #{mission.targets}".colorize(:blue) if mission.targets
+    puts "Destination/s: #{mission.destinations}".colorize(:blue) if mission.destinations
+    puts "Current Location: #{mission.current_location}".colorize(:blue) if mission.current_location
+    puts "Altitude: #{mission.altitude}".colorize(:blue) if mission.altitude
+    puts "Mission web site: #{mission.url}".colorize(:blue)
     puts ""
     visit_website?(mission)
   end
@@ -113,6 +132,8 @@ class SpaceMissions::CLI
         search_again?
       elsif input == 'no'
         search_again?
+      elsif input == 'exit'
+        goodbye
       else
         error
       end
@@ -127,7 +148,7 @@ class SpaceMissions::CLI
       input = gets.strip.downcase
       get_mission(input)
 
-      case input
+      case input.downcase
       when "target"
         target
       when "launch"
@@ -207,8 +228,10 @@ class SpaceMissions::CLI
     else
       @list = list
       display_missions(list)
+      puts ""
       puts "Please enter the number of a mission you'd like to learn more about."
       puts "You can also type exit or 'new' to start a new search."
+      puts ""
       listen
     end
   end
