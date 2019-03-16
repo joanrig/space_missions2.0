@@ -296,6 +296,7 @@ class SpaceMissions::CLI
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
           search_results
         end
+        goodbye if @input == exit
       end#2nd while
     end
   end
