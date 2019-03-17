@@ -27,10 +27,9 @@ class SpaceMissions::Mission
       missions = @missions_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > year.to_i}
 
     elsif parameter == "before"
-      #removes edge cases where launch date is TBD, etc.
-        @filtered = @missions_by_status.select {|mission| mission.launch_date.to_i > 0}
-        missions = @filtered.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < year.to_i}
-
+      #does not catch launch_date TBD
+        @missions_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < year.to_i}
+        
     elsif parameter == "between"
       later =  @missions_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > year}
       before = @filtered.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i < end_year}

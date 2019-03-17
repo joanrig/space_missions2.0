@@ -97,7 +97,6 @@ class SpaceMissions::CLI
   def show_info(mission)
     puts ""
     puts "Fast facts about #{mission.name}:"
-    binding.pry
     puts ""
     puts "Description:".colorize(:blue)
     puts "#{mission.description}".colorize(:blue)
