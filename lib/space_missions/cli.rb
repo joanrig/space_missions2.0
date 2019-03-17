@@ -54,7 +54,6 @@ class SpaceMissions::CLI
     puts "Current"
     puts "Future"
     puts "Proposed"
-    puts "All"
     puts ""
     puts "You can also type 'exit' to quit."
     puts ""
@@ -94,7 +93,7 @@ class SpaceMissions::CLI
       end
     end
   end
-#{dns.ljust(20)} => #{ip}”
+
   def show_info(mission)
     puts ""
     puts "Fast facts about #{mission.name}:"
