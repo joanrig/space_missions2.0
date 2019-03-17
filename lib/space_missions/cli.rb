@@ -9,9 +9,9 @@ class SpaceMissions::CLI
   end
 
   def welcome
-    puts"".center(80).on_white
-    puts"".center(80).on_white
-    puts"".center(80).on_white
+    3.times do |x|
+      puts"".center(80).on_white
+    end
     puts"*************************************".center(80).black.on_white
     puts "Welcome to JPL's Space Missions!".center(80).black.on_white
     puts"*************************************".center(80).black.on_white
@@ -20,10 +20,9 @@ class SpaceMissions::CLI
     puts"This Ruby Gem is based on data from NASA's Jet Propulsion Laboratory.".center(80).black.on_white
     puts"JPL, based in Los Angeles is one of NASA's three space flight centers.".center(80).black.on_white
     puts"Welcome to your universe!".center(80).black.on_white
-    puts"".center(80).on_white
-    puts"".center(80).on_white
-    puts"".center(80).blue.on_white
-    puts"".center(80).blue.on_white
+    3.times do |x|
+      puts"".center(80).on_white
+    end
   end
 
   def get_data
@@ -35,11 +34,12 @@ class SpaceMissions::CLI
     sleep(2)
     puts "It's a big universe ..."
     puts ""
-    puts "Did you know ... that JPL's roots go back to 1936?"
+    puts "Did you know ... "
+    puts "that JPL's roots go back to 1936?"
     puts "That's when a group of researchers at Caltech's Guggenheim Aeronautical Laboratory performed a series of rocket experiments in a dry canyon wash known as Arroyo Seco. They moved out to the valley after an accidental explosion on campus..."
     puts ""
     sleep (2)
-    puts "Did you know .... that JPL's has two current missions that launched in 1977? They are the twin Voyager probes ... check them out under 'current' missions ..."
+    puts "JPL has two current missions that launched in 1977. They are the twin Voyager probes. Both have reached interstellar space, which means they are beyond the magnetic field of our sun. You can learn more about them under 'current' missions ..."
     SpaceMissions::Scraper.new.get_attributes
   end
 
@@ -62,13 +62,9 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip.downcase
       if ["past", "current", "future", "proposed"].include?(input)
-        list = SpaceMissions::Mission.send("find_by_status", input)
-        display_missions(list)
-        refine_search?
-      elsif input == 'all'
-        list = SpaceMissions::Mission.all
-        display_missions(list)
-        refine_search?
+        list = SpaceMissions::Mission.send("find_by_status", input)#do the search
+        display_missions(list) #display results
+        refine_search?# offer 2 options to proceed
       elsif input == 'exit'
         goodbye
       else
@@ -89,7 +85,7 @@ class SpaceMissions::CLI
   end
 
   def get_mission(input)
-    if input.to_i > 0 && input.to_i < @list.size
+    if input.to_i > 0 && input.to_i <= @list.size
       mission = @list[input.to_i - 1]
       if mission
         show_info(mission)
@@ -98,25 +94,26 @@ class SpaceMissions::CLI
       end
     end
   end
-
+#{dns.ljust(20)} => #{ip}”
   def show_info(mission)
     puts ""
-    puts "Fast facts about #{mission.name}:".colorize(:blue)
+    puts "Fast facts about #{mission.name}:"
+    binding.pry
     puts ""
-    puts "Acronym: #{mission.acronym}".colorize(:blue) if mission.acronym
-    puts "Status: #{mission.status}".colorize(:blue) if mission.status
-    puts "Description: #{mission.description}".colorize(:blue) #if mission.description
-    puts "Type: #{mission.type}".colorize(:blue) if mission.type
-    puts "Launch Date: #{mission.launch_date}".colorize(:blue) if mission.launch_date
-    puts "Launch Location: #{mission.launch_location}".colorize(:blue) if mission.launch_location
-    puts "Landing Date: #{mission.landing_date}".colorize(:blue) if mission.landing_date
-    puts "End Date: #{mission.end_date}".colorize(:blue) if mission.end_date
-    puts "Mission End Date: #{mission.mission_end_date}".colorize(:blue) if mission.mission_end_date
-    puts "Target/s: #{mission.targets}".colorize(:blue) if mission.targets
-    puts "Destination/s: #{mission.destinations}".colorize(:blue) if mission.destinations
-    puts "Current Location: #{mission.current_location}".colorize(:blue) if mission.current_location
-    puts "Altitude: #{mission.altitude}".colorize(:blue) if mission.altitude
-    puts "Mission web site: #{mission.url}".colorize(:blue)
+    puts "Description:".colorize(:blue)
+    puts "#{mission.description}".colorize(:blue)
+    puts ""
+    puts "#{"Acronym:".ljust(20)} => #{mission.acronym}".colorize(:blue) if mission.acronym
+    puts "#{"Status:".ljust(20)} => #{mission.status}".colorize(:blue) if mission.status
+    puts "#{"Type:".ljust(20)} => #{mission.type}".colorize(:blue) if mission.type
+    puts "#{"Launch date:".ljust(20)} => #{mission.launch_date}".colorize(:blue) if mission.launch_date
+    puts "#{"Launch location:".ljust(20)} => #{mission.launch_location}".colorize(:blue) if mission.launch_location
+    puts "#{"End Date:".ljust(20)} => #{mission.landing_date}".colorize(:blue) if mission.landing_date
+    puts "#{"Mission End date:".ljust(20)} => #{mission.mission_end_date}".colorize(:blue) if mission.mission_end_date
+    puts "#{"Target/s:".ljust(20)} => #{mission.targets}".colorize(:blue) if mission.targets
+    puts "#{"Destination/s:".ljust(20)} => #{mission.destinations}".colorize(:blue) if mission.destinations
+    puts "#{"Current location:".ljust(20)} => #{mission.current_location}".colorize(:blue) if mission.current_location
+    puts "#{"Altitude:".ljust(20)} => #{mission.altitude}".colorize(:blue) if mission.altitude
     puts ""
     visit_website?(mission)
   end
@@ -138,7 +135,6 @@ class SpaceMissions::CLI
         error
       end
     end
-    goodbye if input == 'exit'
   end
 
 #*************************   user interface ********************
@@ -215,11 +211,11 @@ class SpaceMissions::CLI
     while input != "exit"
       input = gets.strip
       @list = SpaceMissions::Mission.send(method, input)
-      search_results
+      refined_search_results
     end#while
   end
 
-  def search_results
+  def refined_search_results
     if @list == []
       puts ""
       puts "Sorry, we couldn't find any missions matching your search."
@@ -267,7 +263,7 @@ class SpaceMissions::CLI
         parameter = @input[0]
         year = @input[1]
         @list = SpaceMissions::Mission.launched(parameter, year)
-        search_results
+        refined_search_results
       else
         error
       end
@@ -294,7 +290,7 @@ class SpaceMissions::CLI
           search_results
         else
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
-          search_results
+          refined_search_results
         end
         goodbye if @input == exit
       end#2nd while
