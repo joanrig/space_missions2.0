@@ -2,3 +2,7 @@
 
 * 1 Bug Fix
   - fixed 'before' search. previous version tried to account for launch dates of 'TBD' but broke functionality.
+
+  === 0.1.1
+  Bug Fix
+    - fixed 'between' search

@@ -245,14 +245,16 @@ class SpaceMissions::CLI
       puts ""
 
       @input = gets.strip.split
-      if !["before", "after", "between"].include?(@input[0])
-        error
-      else
+      if ["before", "after"].include?(@input[0])
         launched_before_or_after
+      elsif
+        @input[0] == "between"
         launched_between
+      else
+        error
       end
     end#while
-    new_search?
+    new_search
   end
 
   def launched_before_or_after
@@ -266,7 +268,7 @@ class SpaceMissions::CLI
         error
       end
     end
-    new_search?
+    new_search
   end
 
   def launched_between
@@ -285,7 +287,7 @@ class SpaceMissions::CLI
 
         if start_year < end_year
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
-          search_results
+          refined_search_results
         else
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
           refined_search_results
