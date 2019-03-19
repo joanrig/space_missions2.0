@@ -6,3 +6,9 @@
   === 0.1.3
   Bug Fix
     - fixed 'between' search
+
+ ==0.1.4
+
+ Feature
+  -added ability to search all missions, not just past, current, proposed, future
+  -added ability to sort missions by year
