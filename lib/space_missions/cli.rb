@@ -3,6 +3,7 @@ class SpaceMissions::CLI
 
 
   def call
+    #self
     welcome
     get_data
     new_search#=> pick by status => display missions => refine search => listen
@@ -54,13 +55,14 @@ class SpaceMissions::CLI
     puts "Current"
     puts "Future"
     puts "Proposed"
+    puts "All"
     puts ""
     puts "You can also type 'exit' to quit."
     puts ""
     input = nil
     while input != "exit"
       input = gets.strip.downcase
-      if ["past", "current", "future", "proposed"].include?(input)
+      if ["past", "current", "future", "proposed", "all"].include?(input)
         list = SpaceMissions::Mission.send("find_by_status", input)#do the search
         display_missions(list) #display results
         refine_search?# offer 2 options to proceed
@@ -162,6 +164,9 @@ class SpaceMissions::CLI
   def error
     puts "Whoa, are you typing in an alien language?"
     puts "I didn't understand that."
+    puts ""
+    puts "Try your command again."
+    puts "You can also type 'new' for new search or 'exit'."
     search_again?
   end
 
@@ -242,10 +247,11 @@ class SpaceMissions::CLI
       puts "'after 2005' => missions launched after Dec. 31, 2004"
       puts "'before 1980' => missions launched before Jan. 1, 1981"
       puts "'between' => to search missions launched during a range of years"
+      puts "'earliest' => to see mission with earliest launch date"
       puts ""
 
       @input = gets.strip.split
-      if ["before", "after"].include?(@input[0])
+      if ["before", "after", "earliest"].include?(@input[0])
         launched_before_or_after
       elsif
         @input[0] == "between"
@@ -258,7 +264,10 @@ class SpaceMissions::CLI
   end
 
   def launched_before_or_after
-    if @input[1].to_i > 999 && @input[1].to_i < 9999
+    if @input[0] == "earliest"
+      @list = SpaceMissions::Mission.earliest_launch_date
+      refined_search_results
+    elsif @input[1].to_i > 999 && @input[1].to_i < 9999
       if ["before", "after"].include?(@input[0].downcase)
         parameter = @input[0]
         year = @input[1]

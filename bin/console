@@ -10,5 +10,9 @@ require_relative "../lib/space_missions"
 # require "pry"
 # Pry.start
 
+def reload!
+  load './lib/space_missions/cli.rb'
+end
+
 require "irb"
 IRB.start(__FILE__)

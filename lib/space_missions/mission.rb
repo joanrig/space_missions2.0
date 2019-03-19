@@ -18,8 +18,16 @@ class SpaceMissions::Mission
   end
 
   def self.find_by_status(input)
-    @missions_by_status = @@all if input.downcase == "all"
-    @missions_by_status = @@all.select {|mission| mission.status == input.capitalize if mission.status}
+    if input.downcase == "all"
+      @missions_by_status = @@all
+    else
+      @missions_by_status = @@all.select {|mission| mission.status == input.capitalize if mission.status}
+    end
+  end
+
+  def self.earliest_launch_date
+    filtered = @@missios_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > 0}
+    earliest = filtered.sort_by {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i}
   end
 
   def self.launched(parameter, year, end_year=nil)
