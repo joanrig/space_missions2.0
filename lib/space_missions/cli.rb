@@ -244,14 +244,15 @@ class SpaceMissions::CLI
       puts "Tell us which way you'd like to search:"
       puts ""
       puts "Examples:"
-      puts "'after 2005' => missions launched after Dec. 31, 2004"
-      puts "'before 1980' => missions launched before Jan. 1, 1981"
-      puts "'between' => to search missions launched during a range of years"
-      puts "'earliest' => to see mission with earliest launch date"
+      puts "#{'sort'.ljust(20)} => to see missions listed by launch date (if they have launch dates)"
+      puts ""
+      puts "#{'after 2005'.ljust(20)} => missions launched after Dec. 31, 2004"
+      puts "#{'before 1980'.ljust(20)} => missions launched before Jan. 1, 1981"
+      puts "#{'between'.ljust(20)} => to search missions launched during a range of years"
       puts ""
 
       @input = gets.strip.split
-      if ["before", "after", "earliest"].include?(@input[0])
+      if ["before", "after", "sort"].include?(@input[0])
         launched_before_or_after
       elsif
         @input[0] == "between"
@@ -264,8 +265,8 @@ class SpaceMissions::CLI
   end
 
   def launched_before_or_after
-    if @input[0] == "earliest"
-      @list = SpaceMissions::Mission.earliest_launch_date
+    if @input[0] == "sort"
+      @list = SpaceMissions::Mission.sort_by_launch_date
       refined_search_results
     elsif @input[1].to_i > 999 && @input[1].to_i < 9999
       if ["before", "after"].include?(@input[0].downcase)

@@ -25,9 +25,9 @@ class SpaceMissions::Mission
     end
   end
 
-  def self.earliest_launch_date
-    filtered = @@missios_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > 0}
-    earliest = filtered.sort_by {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i}
+  def self.sort_by_launch_date
+    filtered = @missions_by_status.select {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i > 0}
+    missions = filtered.sort_by {|mission| mission.launch_date.scan(/\d{4}/)[0].to_i}
   end
 
   def self.launched(parameter, year, end_year=nil)
