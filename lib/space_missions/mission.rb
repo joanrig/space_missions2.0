@@ -8,7 +8,6 @@ class SpaceMissions::Mission
     @@all << self
   end
 
-
   def self.find_by_target(input)
     missions = @missions_by_status.select {|mission| mission.targets.include?(input.capitalize) if mission.targets}
   end

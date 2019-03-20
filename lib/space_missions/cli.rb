@@ -299,7 +299,7 @@ class SpaceMissions::CLI
           @list = SpaceMissions::Mission.launched("between", start_year, end_year)
           refined_search_results
         else
-          @list = SpaceMissions::Mission.launched("between", start_year, end_year)
+          @list = SpaceMissions::Mission.launched("between", end_year, start_year)
           refined_search_results
         end
         goodbye if @input == exit
